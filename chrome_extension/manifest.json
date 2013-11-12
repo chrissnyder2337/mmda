@@ -1,0 +1,23 @@
+{
+  "name": "MMDA - Parse Site",
+  "description": "Parser of the current tab into the MMDA",
+  "manifest_version": 2,
+  "version": "1.1",
+  "background": {
+    "persistent": false,
+    "page": "background.html"
+  },
+  "browser_action": {
+    "default_icon": "ut_mail_19.png"
+  },
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "permissions": [
+    "unlimitedStorage",
+    "notifications",
+    "background",
+    "tabs",
+    "http://[OUR SITE URL].com/*"
+  ]
+}
