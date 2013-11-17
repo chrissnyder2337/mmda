@@ -29,9 +29,9 @@ class MMDA_Template{
   </head>
   ';
 
-$body_prefix = '<body style="" screen_capture_injected="true">';
+public $body_prefix = '<body style="" screen_capture_injected="true">';
 
-$nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+public $nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -52,11 +52,11 @@ $nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="navigation
       </div>
     </div>';
 
-  $content_prefix = '<div class="container">      <div class="starter-template">';
+  public $content_prefix = '<div class="container">      <div class="starter-template">';
 
-  $content_suffix = ' </div><!-- /.container -->';
+  public $content_suffix = ' </div><!-- /.container -->';
 
-  $body_suffix = ' <!-- Bootstrap core JavaScript
+  public $body_suffix = ' <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -72,12 +72,12 @@ public function setContent($content)
 
   public function render()
   {
-    print $head;
-    print $body_prefix;
-    print $content_prefix;
-    print $content;
-    print $content_suffix;
-    print $body_suffix;
+    print $this->head;
+    print $this->body_prefix;
+    print $this->content_prefix;
+    print $this->content;
+    print $this->content_suffix;
+    print $this->body_suffix;
   }
 
 
