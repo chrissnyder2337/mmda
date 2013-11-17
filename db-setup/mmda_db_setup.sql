@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `AudioMetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `AudioMetadata` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `audio_bitrate` float DEFAULT NULL,
   `audio_sample_rate` int(11) DEFAULT NULL,
   `channels` int(11) DEFAULT NULL COMMENT 'french, english',
@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS `AuthoringMetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `AuthoringMetadata` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `created_date` timestamp NULL DEFAULT NULL,
   `last_modified_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`uuid`)
@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS `DocumentCountsMetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `DocumentCountsMetadata` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `image_count` int(11) DEFAULT NULL,
   `page_count` int(11) DEFAULT NULL,
   `table_count` int(11) DEFAULT NULL,
@@ -111,7 +111,7 @@ DROP TABLE IF EXISTS `ExecutableMetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ExecutableMetadata` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `architecture_bits` int(11) DEFAULT NULL,
   `machine_type` varchar(32) NOT NULL COMMENT 'ex: x86-32',
   `machine_platform` varchar(32) NOT NULL COMMENT 'linux, windows, etc',
@@ -136,7 +136,7 @@ DROP TABLE IF EXISTS `File`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `File` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `anotated_name` varchar(32) DEFAULT NULL COMMENT 'User defined',
   `resource_name` varchar(32) NOT NULL COMMENT 'File Name',
   `content_type` varchar(32) NOT NULL,
@@ -166,8 +166,8 @@ DROP TABLE IF EXISTS `FileReferences`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileReferences` (
-  `parent_uuid` binary(16) NOT NULL,
-  `child_uuid` binary(16) NOT NULL,
+  `parent_uuid` varchar(64) NOT NULL,
+  `child_uuid` varchar(64) NOT NULL,
   PRIMARY KEY (`parent_uuid`,`child_uuid`),
   KEY `parent_uuid` (`parent_uuid`,`child_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -190,7 +190,7 @@ DROP TABLE IF EXISTS `ImageResolutionMetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ImageResolutionMetadata` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `x_resolution` int(11) NOT NULL,
   `y_resolution` int(11) NOT NULL,
   `resolution_units` varchar(32) NOT NULL,
@@ -215,7 +215,7 @@ DROP TABLE IF EXISTS `Keywords`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Keywords` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `keyword` varchar(256) NOT NULL,
   KEY `keyword` (`keyword`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -238,7 +238,7 @@ DROP TABLE IF EXISTS `VideoMetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `VideoMetadata` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `video_datarate` int(11) DEFAULT NULL,
   `video_formate` varchar(32) DEFAULT NULL,
   `video_duration` int(11) DEFAULT NULL,
@@ -264,7 +264,7 @@ DROP TABLE IF EXISTS `WebpageMetadata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `WebpageMetadata` (
-  `uuid` binary(16) NOT NULL,
+  `uuid` varchar(64) NOT NULL,
   `webpage_title` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -288,4 +288,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-16 17:48:02
+-- Dump completed on 2013-11-17 11:48:58
