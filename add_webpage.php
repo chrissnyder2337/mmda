@@ -28,3 +28,7 @@ $add_webpage_form = '
 </fieldset>
 </form>
 ';
+
+$template->setContent($add_webpage_form);
+$template->setTab(3);
+$template->render();

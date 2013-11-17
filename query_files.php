@@ -41,11 +41,11 @@ $query_form = '
   <label class="col-md-4 control-label" for="operator"></label>
   <div class="col-md-4">
     <select id="operator" name="operator" class="form-control">
-      <option value="= 'value'">Equal To</option>
-      <option value="!= 'value'">Not Equal To</option>
-      <option value="< 'value'">Less Than</option>
-      <option value="> 'value'">Greater Than</option>
-      <option value="LIKE '%value%'">Contains</option>
+      <option value="= \'value\'">Equal To</option>
+      <option value="!= \'value\'">Not Equal To</option>
+      <option value="< \'value\'">Less Than</option>
+      <option value="> \'value\'">Greater Than</option>
+      <option value="LIKE \'%value%\'">Contains</option>
       <option value="">Does Not Contain</option>
     </select>
   </div>
@@ -71,3 +71,7 @@ $query_form = '
 </fieldset>
 </form>
 ';
+
+$template->setContent($query_form);
+$template->setTab(4);
+$template->render();

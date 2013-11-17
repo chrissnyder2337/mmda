@@ -37,3 +37,7 @@ $time_report_form = '
 </fieldset>
 </form>
 ';
+
+$template->setContent($time_report_form);
+$template->setTab(6 );
+$template->render();
