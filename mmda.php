@@ -36,7 +36,7 @@ function mmda_add_file($filepath, $externalfilepath = NULL){
     //insert into
     mmda_insert_file($metadata);
 
-    return "This file's DAGR was inserted with the id <b>".$uuid."</b>"
+    return "This file's DAGR was inserted with the id <b>".$uuid."</b>";
 
     print "<pre>";
     print_r($metadata);
