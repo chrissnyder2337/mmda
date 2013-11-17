@@ -9,17 +9,17 @@ class MMDA_Template{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="/libraries/bootstrap/docs-assets/ico/favicon.png">
+    <link rel="shortcut icon" href="./libraries/bootstrap/docs-assets/ico/favicon.png">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Mulimedia Data Aggregator</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/libraries/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="./libraries/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="starter-template.css" rel="stylesheet">
+    <link href="./template/mmda.css" rel="stylesheet">
 
-    <!--[if lt IE 9]><script src="/libraries/bootstrap/docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="./libraries/bootstrap/docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -40,13 +40,16 @@ public $nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="nav
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Mulimedia Data Aggregator</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li class="active"><a href="#">Welcome</a></li>
+            <li><a href="#about">Add File</a></li>
+            <li><a href="#contact">Add Website</a></li>
+            <li><a href="#query">Query Metadata</a></li>
+            <li><a href="#contact">Orphan Report</a></li>
+            <li><a href="#contact">Time Report</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -60,7 +63,7 @@ public $nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="nav
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="/libraries/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./libraries/bootstrap/dist/js/bootstrap.min.js"></script>
   </body></html>';
 
   public $content;
@@ -74,6 +77,7 @@ public function setContent($content)
   {
     print $this->head;
     print $this->body_prefix;
+    print $this->nav_bar;
     print $this->content_prefix;
     print $this->content;
     print $this->content_suffix;
