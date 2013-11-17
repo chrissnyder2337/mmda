@@ -61,25 +61,6 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'insertfile'){
 
 
 
-
-
-
-
-
-
-
-
-print "<pre>";
-print_r($_POST);
-print_r($_FILES);
-print "</pre>";
-
-
-
-
-
-
-
 $template->setTab(2);
 $template->render();
 
