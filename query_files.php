@@ -1,13 +1,26 @@
 <?php 
 require_once ('load_libraries.php');
 
+function get_attributeoptions(){
+ 
+  $attribute_options = '';
+
+  $attributes = mmda_get_filterable_attributes();
+  
+  foreach($attributes as $dbattr => $displayattr){
+    $attribute_options .= '<option value="'.$dbattr.'">'.$displayattr.'</option>';
+  }
+  
+  return $attribute_options;
+}
+
 $criteria_form = '
 <div class="row">
   <div class="form-inline">
     <div class="col-md-4">
       <div class="form-group">
           <select id="attribute" name="attribute[]" class="form-control">
-            <option value="1">Criteria</option>
+            '.get_attributeoptions().'
           </select>
       </div>
     </div>

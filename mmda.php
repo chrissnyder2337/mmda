@@ -220,7 +220,7 @@ function mmda_get_filterable_attributes(){
   global $metadata_attributes;
   $filterable_attributes = array();
   foreach ($metadata_attributes as $key => $properties) {
-    if($properties['filterable']){
+    if(isset($properties['filterable']) && $properties['filterable']){
       $filterable_attributes[$key] = $properties['display'];
     }
   }
@@ -239,5 +239,3 @@ function mmda_get_tables(){
   }
   return array_values($tables);
 }
-
-mmda_get_file('21c95ed4-4fa1-11e3-8986-b499baf5b6ef');
