@@ -51,7 +51,8 @@ public function setContent($content)
   $this->content = $content;
 }
 
-public function setNavbar($activeTab)
+/* givin a tab number sets it as the active tab */
+public function setTab($activeTab)
 {
   $this->nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
