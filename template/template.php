@@ -1,6 +1,6 @@
 <?php
 
-class Template{
+class MMDA_Template{
 
   public $title = 'MMDA';
   public $head = '<html lang="en"><head>
