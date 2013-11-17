@@ -67,12 +67,12 @@ public function setTab($activeTab)
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li '. (($activeTab == 1)?'class="active"':'').'><a href="#">Welcome</a></li>
-            <li '. (($activeTab == 2)?'class="active"':'').'><a href="#about">Add File</a></li>
-            <li'. (($activeTab == 3)?'class="active"':'').'><a href="#contact">Add Website</a></li>
-            <li'. (($activeTab == 4)?'class="active"':'').'><a href="#query">Query Metadata</a></li>
-            <li'. (($activeTab == 5)?'class="active"':'').'><a href="#contact">Orphan Report</a></li>
-            <li'. (($activeTab == 6)?'class="active"':'').'><a href="#contact">Time Report</a></li>
+            <li '. (($activeTab == 1)?'class="active"':'').'><a href="index.php">Welcome</a></li>
+            <li '. (($activeTab == 2)?'class="active"':'').'><a href="add_file.php">Add File</a></li>
+            <li '. (($activeTab == 3)?'class="active"':'').'><a href="add_webpage.php">Add Webpage</a></li>
+            <li '. (($activeTab == 4)?'class="active"':'').'><a href="query_files.php">Query Metadata
+            <li '. (($activeTab == 5)?'class="active"':'').'><a href="orphan_report.php">Orphan Report</a></li>
+            <li '. (($activeTab == 6)?'class="active"':'').'><a href="time_report.php">Time Report</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
