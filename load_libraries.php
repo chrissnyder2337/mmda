@@ -23,7 +23,7 @@ $db = new OBJ_mysql($config);
 $template = new MMDA_Template();
 
 //set variables
-$upload_dir = '/var/www/uploads/';
+$upload_dir = '/var/www/mmda/files/';
 
 
 
