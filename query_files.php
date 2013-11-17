@@ -1,64 +1,78 @@
 <?php 
 require_once ('load_libraries.php');
 
+function get_attributeoptions(){
+ 
+  $attribute_options = '';
+
+  $attributes = mmda_get_filterable_attributes();
+  
+  foreach($attributes as $dbattr => $displayattr){
+    $attribute_options .= '<option value="'.$dbattr.'">'.$displayattr.'</option>';
+  }
+  
+  return $attribute_options;
+}
+
+$criteria_form = '
+<div class="row">
+  <div class="form-inline">
+    <div class="col-md-4">
+      <div class="form-group">
+          <select id="attribute" name="attribute[]" class="form-control">
+            '.get_attributeoptions().'
+          </select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+          <select id="operator" name="operator[]" class="form-control">
+            <option value="= \'value\'">Equal To</option>
+            <option value="!= \'value\'">Not Equal To</option>
+            <option value="< \'value\'">Less Than</option>
+            <option value="> \'value\'">Greater Than</option>
+            <option value="LIKE \'%value%\'">Contains</option>
+            <option value="">Does Not Contain</option>
+          </select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <!-- Text input-->
+      <div class="form-group">
+        <input id="value" name="value[]" placeholder="value" class="form-control input-md" type="text">
+      </div>
+    </div>
+  </div>
+</div>
+';
+
 $query_form = '
+<script>
+  var criteria = 1;
+  function add_criteria() {
+      criteria++;
+      var objTo = document.getElementById("criteria_field")
+      var divtest = document.createElement("div");
+      divtest.innerHTML =document.getElementById("criteria_field_template").innerHTML;
+      
+      objTo.appendChild(divtest)
+  }
+</script>
 <form class="form-horizontal">
 <fieldset>
 
 <!-- Form Name -->
 <legend>Query Metadata</legend>
 
-<!-- Select Basic -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="metadataType">Metadata Type</label>
-  <div class="col-md-4">
-    <select id="metadataType" name="metadataType" class="form-control">
-      <option value="1">Audio</option>
-      <option value="2">Authoring</option>
-      <option value="3">Document Counts</option>
-      <option value="4">Executable</option>
-      <option value="5">Image Dimensions</option>
-      <option value="6">Image Resolution</option>
-      <option value="7">Keyword</option>
-      <option value="8">Video</option>
-      <option value="9">Webpage</option>
-    </select>
-  </div>
+<input type="button" id="more_criteria" onclick="add_criteria();" value="Add Criteria" />
+
+<div id="criteria_field_template" style="display:none">
+'.$criteria_form.'
 </div>
 
-<!-- Select Basic -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="attribute">Attribute</label>
-  <div class="col-md-4">
-    <select id="attribute" name="attribute" class="form-control">
-      <option value="1">[dynamically created based off of metadataType]</option>
-    </select>
-  </div>
-</div>
-
-<!-- Select Basic -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="operator"></label>
-  <div class="col-md-4">
-    <select id="operator" name="operator" class="form-control">
-      <option value="= \'value\'">Equal To</option>
-      <option value="!= \'value\'">Not Equal To</option>
-      <option value="< \'value\'">Less Than</option>
-      <option value="> \'value\'">Greater Than</option>
-      <option value="LIKE \'%value%\'">Contains</option>
-      <option value="">Does Not Contain</option>
-    </select>
-  </div>
-</div>
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="value">Value</label>  
-  <div class="col-md-4">
-  <input id="value" name="value" placeholder="" class="form-control input-md" type="text">
-    
-  </div>
-</div>
+<div id="criteria_field"> '
+ . $criteria_form .
+'</div>
 
 <!-- Button -->
 <div class="form-group">

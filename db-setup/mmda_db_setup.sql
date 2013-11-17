@@ -240,7 +240,7 @@ DROP TABLE IF EXISTS `VideoMetadata`;
 CREATE TABLE `VideoMetadata` (
   `uuid` varchar(64) NOT NULL,
   `video_datarate` int(11) DEFAULT NULL,
-  `video_formate` varchar(32) DEFAULT NULL,
+  `video_format` varchar(32) DEFAULT NULL,
   `video_duration` int(11) DEFAULT NULL,
   `audio_duration` int(11) DEFAULT NULL,
   PRIMARY KEY (`uuid`)
@@ -288,4 +288,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-17 11:48:58
+-- Dump completed on 2013-11-17 12:23:03

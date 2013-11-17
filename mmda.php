@@ -220,7 +220,7 @@ function mmda_get_filterable_attributes(){
   global $metadata_attributes;
   $filterable_attributes = array();
   foreach ($metadata_attributes as $key => $properties) {
-    if($properties['filterable']){
+    if(isset($properties['filterable']) && $properties['filterable']){
       $filterable_attributes[$key] = $properties['display'];
     }
   }
