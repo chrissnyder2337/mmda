@@ -64,7 +64,7 @@ $query_form = '
 <!-- Form Name -->
 <legend>Query Metadata</legend>
 
-<input type="button" id="more_criteria" onclick="add_criteria();" value="Add Criteria" />
+<a id="more_criteria" onclick="add_criteria();" ><span class="glyphicon glyphicon-plus"></span> Add Filter Criteria</a>
 
 <div id="criteria_field_template" style="display:none">
 '.$criteria_form.'

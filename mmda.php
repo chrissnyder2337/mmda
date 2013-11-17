@@ -239,3 +239,22 @@ function mmda_get_tables(){
   }
   return array_values($tables);
 }
+/*
+ * Parses through all downloadable content of the given webpage.
+ * @return array urls
+ */
+function mmda_get_webpage_content($url){
+  $html = file_get_html($url);
+  $content = array();
+  // Find all images
+  foreach($html->find('img') as $element){
+    if (substr($element->src,0,1) == "/") $element->src = $url . $element->src;
+    $content[] = $element->src;
+  }
+  // Find all links
+  foreach($html->find('a') as $element){
+    if (substr($element->href,0,1) == "/") $element->href = $url . $element->src;
+    $content[] = $element->href;
+  }
+  return $content;
+}

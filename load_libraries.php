@@ -8,6 +8,7 @@ require_once('libraries/OBJ-MySQL/bin/OBJ_mysql.php');
 require_once('libraries/tikawrapper.php');
 require_once('metadata_attributes.php');
 require_once('mmda.php');
+require_once('libraries/simple_html_dom.php');
 
 
 // SET Template
