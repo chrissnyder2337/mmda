@@ -5,6 +5,7 @@ error_reporting(-1);
 //load the template needed
 require_once ('template/template.php');
 require_once('libraries/OBJ-MySQL/bin/OBJ_mysql.php');
+require_once('libraries/tikawrapper.php');
 require_once('mmda.php');
 
 //SET UP DB
@@ -23,7 +24,7 @@ $db = new OBJ_mysql($config);
 $template = new MMDA_Template();
 
 //set variables
-$upload_dir = '/var/www/mmda/files/';
+$upload_dir = './dagrfiles/';
 
 
 

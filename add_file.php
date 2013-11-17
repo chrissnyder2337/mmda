@@ -39,7 +39,11 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'insertfile'){
     //move uploaded file to more permenat location.
     $uploadedfile = $upload_dir . $_FILES['filetoadd']['name'];
     if (move_uploaded_file($_FILES['filetoadd']['tmp_name'], $uploadedfile)) {
-      $results .= '<div class="alert alert-success"> Upload worked</div>';
+
+      $fileadd_result = mmda_add_file($uploadedfile);
+
+
+      $results .= '<div class="alert alert-success">'.$fileadd_result.'</div>';
     } else {
       $results .= '<div class="alert alert-danger"> Was not able to add. Possible upload attack <a href="add_file.php" class="alert-link">Try Again</a></div>';
     }
