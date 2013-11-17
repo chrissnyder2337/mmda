@@ -10,20 +10,11 @@ class TikaWrapper
         $dir = __DIR__.'/';
         $command = 'java -jar '.$dir.'tika-app-1.4.jar '.$option.' '.$filepath;
 
-        //$process = new Process($command);
-        //$process->setWorkingDirectory($cwd);
 
         exec($command,$output,$return_var);
-        //$process->run();
-        print "<pre>";
-        print_r($command);
-        print_r($dir);
-        print_r($output);
 
         $output = implode("\n", $output);
 
-        print_r($output);
-        print "</pre>";
         if (empty($output)) {
             throw new \RuntimeException($output);
         }
