@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(-1);
 //load the template needed
 require_once ('template/template.php');
 require_once('libraries/OBJ-MySQL/bin/OBJ_mysql.php');
@@ -6,7 +9,7 @@ require_once('libraries/OBJ-MySQL/bin/OBJ_mysql.php');
 //SET UP DB
 
 $config = array();
-$config["hostname"]  = "localhost ";
+$config["hostname"]  = "localhost";
 $config["database"]  = "dagrdb";
 $config["username"]  = "dagrdb";
 $config["password"]  = "snyder";
