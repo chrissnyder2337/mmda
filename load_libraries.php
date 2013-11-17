@@ -5,6 +5,7 @@ error_reporting(-1);
 //load the template needed
 require_once ('template/template.php');
 require_once('libraries/OBJ-MySQL/bin/OBJ_mysql.php');
+require_once('mmda.php');
 
 //SET UP DB
 
