@@ -125,9 +125,4 @@ $metadata_attributes = array(
   );
 
 
-$metadata_aliases = array();
-foreach ($metadata_attributes as $db_attribute => $db_attribute_properties) {
-  foreach ($db_attribute_properties['tika_alias'] as $tika_alias) {
-    $metadata_aliases[$tika_alias] = $db_attribute;
-  }
-}
+

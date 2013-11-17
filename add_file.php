@@ -40,10 +40,18 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'insertfile'){
     $uploadedfile = $upload_dir . $_FILES['filetoadd']['name'];
     if (move_uploaded_file($_FILES['filetoadd']['tmp_name'], $uploadedfile)) {
 
-      $fileadd_result = mmda_add_file($uploadedfile);
+      $dagr_uuid = mmda_add_file($uploadedfile);
+
+      if($dagr_uuid){
+        $results .= '<div class="alert alert-success">This file\'s DAGR was inserted with the id <b>'.$dagr_uuid.'</b></div>';
+
+        $results .= mmda_get_dagr_html($dagr_uuid);
+
+      }else{
+        $results .= '<div class="alert alert-danger"> File already in db.</a></div>';
+      }
 
 
-      $results .= '<div class="alert alert-success">'.$fileadd_result.'</div>';
     } else {
       $results .= '<div class="alert alert-danger"> Was not able to add. Possible upload attack <a href="add_file.php" class="alert-link">Try Again</a></div>';
     }

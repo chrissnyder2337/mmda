@@ -1,10 +1,10 @@
 <?php
-require_once('metadata_attributes.php');
+
+require_once ('load_libraries.php');
 /**
  * Givin a file will add it to db and return results.
  */
 function mmda_add_file($filepath, $is_external = FALSE){
-  global $db;
 
   //get hash of file
   $file_hash = md5_file($filepath);
@@ -17,7 +17,7 @@ function mmda_add_file($filepath, $is_external = FALSE){
     $metadata =  mmda_get_metadata($filepath);
 
     //create uuid
-    $uuid = uniqid();
+    $uuid = mmda_get_uuid();
 
     //add uuid to all metadata tables
     foreach ($metadata as $table => $attributes) {
@@ -37,22 +37,19 @@ function mmda_add_file($filepath, $is_external = FALSE){
 
     //insert into
     mmda_insert_file($metadata);
-    print "<pre>";
-    print_r($metadata);
-    print "</pre>";
 
-    return "This file's DAGR was inserted with the id <b>".$uuid."</b>";
+    return $uuid;
 
 
   }else{
-    return "File already in db";
+    return FALSE;
   }
 
 }
 
 function mmda_check_file_exists($filename,$filehash)
 {
-  global $db;
+  $db = db_connect();
   $query = $db->query("SELECT count(*) as count FROM File WHERE md5_hash = ? and resource_name = ?",array($filehash,$filename));
   $result = $query->fetchAll();
 
@@ -109,7 +106,7 @@ function mmda_match_metadata($tika_metadata){
 
 
 function mmda_insert_file($metadata){
-  global $db;
+  $db = db_connect();
   foreach ($metadata as $table => $attributes) {
 
     $query = $db->insert($table,$attributes);
@@ -119,6 +116,84 @@ function mmda_insert_file($metadata){
   }
   return;
 
+}
+/**
+ * Use the mysql database to generate a uuid
+ * @return string           uuid
+ */
+function mmda_get_uuid(){
+  $db = db_connect();
+
+  $query = $db->query("SELECT UUID() as uuid");
+  $result = $query->fetchAll();
+
+  if($result[0]->uuid){
+    return $result[0]->uuid;
+  }
+
+  return false;
+
+}
+
+function mmda_get_file($uuid){
+  $db = db_connect();
+
+
+  $sql = "SELECT *
+    FROM File
+      LEFT JOIN AudioMetadata on AudioMetadata.uuid = File.uuid
+      LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
+      LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
+      LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN FileReferences on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
+      LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
+      LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+    WHERE
+      File.uuid = ?";
+
+  $query = $db->query($sql,array($uuid));
+
+  $results = $query->fetchAllArray();
+
+  return $results[0];
+
+}
+
+function mmda_get_dagr_html($uuid){
+  global $metadata_attributes;
+  $file_metadata = mmda_get_file($uuid);
+
+  $filename = $file_metadata['resource_name'];
+
+  $html = '
+    <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+  <h3 class="panel-title"><span class="glyphicon glyphicon-file"></span> '.$filename.'</h3> ('.$uuid.')</div>
+  <div class="panel-body">
+    <a href="#">Download</a> | <a href="#">Edit</a> | <a href="#">Remove DAGR</a>
+  </div>
+
+  <!-- List group -->
+  <ul class="list-group">';
+
+  foreach ($file_metadata as $key => $value) {
+    if(!empty($value)){
+      $html .= '<li class="list-group-item">';
+      if(isset($metadata_attributes[$key]) && isset($metadata_attributes[$key]['display'])){
+        $label = $metadata_attributes[$key]['display'];
+      }else{
+        $label = $key;
+      }
+      $html .= '<strong>'.$label.':</strong> ';
+      $html .= $value;
+      $html .= '</li>';
+    }
+  }
+
+  $html .= '</ul></div>';
+  return $html;
 }
 
 /**
@@ -151,3 +226,18 @@ function mmda_get_filterable_attributes(){
   }
   return $filterable_attributes;
 }
+/*
+ * Gets a list of all metadata tables
+ */
+function mmda_get_tables(){
+  global $metadata_attributes;
+  $tables = array();
+  foreach ($metadata_attributes as $attribute => $properties) {
+    if(!isset($tables[$properties['table']])){
+      $tables[$properties['table']] = $properties['table'];
+    }
+  }
+  return array_values($tables);
+}
+
+mmda_get_file('21c95ed4-4fa1-11e3-8986-b499baf5b6ef');
