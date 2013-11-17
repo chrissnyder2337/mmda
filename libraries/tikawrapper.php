@@ -16,7 +16,7 @@ class TikaWrapper
         $output = implode("\n", $output);
 
         if (empty($output)) {
-            throw new \RuntimeException($output);
+            throw new \RuntimeException('command: '.$command. 'output: '.$output);
         }
 
         return $output;
