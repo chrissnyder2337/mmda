@@ -29,15 +29,23 @@ class MMDA_Template{
   </head>
   ';
 
-public $body_prefix = '<body style="" screen_capture_injected="true">';
+public $body_prefix = '<body style="" screen_capture_injected="true"> <div id="wrap">';
 
 public $nav_bar = '';
 
   public $content_prefix = '<div class="container">      <div class="starter-template">';
 
-  public $content_suffix = ' </div><!-- /.container -->';
+  public $content_suffix = ' </div><!-- /.container --></div>';
 
-  public $body_suffix = ' <!-- Bootstrap core JavaScript
+  public $body_suffix = '
+  </div> <!-- /wrap div-->
+  <div id="footer">
+      <div class="container">
+        <p class="text-muted credit"> Project for <em>CMSC424: Database Design</em> at the University of Maryland. Created by <a href="http://chrissnyder.org">Christopher Snyder</a> and <a href="http://www.linkedin.com/pub/jonathan-snyder/9/a1b/b89">Jon Snyder</a>. &copy; 2013</p>
+      </div>
+    </div>
+
+  <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
