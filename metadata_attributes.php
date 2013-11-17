@@ -74,5 +74,21 @@ $metadata_attributes = array(
     'table' => 'AudioMetadata',
     'tika_alias' => array()
     ),
+  'created_date' => array(
+    'table' => 'AuthoringMetadata',
+    'tika_alias' => array('Creation-Date','meta:creation-date','dcterms:created','Date/Time Original')
+    ),
+  'last_modified_date' => array(
+    'table' => 'AuthoringMetadata',
+    'tika_alias' => array('modified','dcterms:modified','date','Last-Modified')
+    ),
 
   );
+
+
+$aliases = array();
+foreach ($metadata_attributes as $db_attribute => $db_attribute_properties) {
+  foreach ($db_attribute_properties['tika_alias'] as $tika_alias) {
+    $aliases[$tika_alias] = $db_attribute;
+  }
+}
