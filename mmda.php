@@ -80,8 +80,9 @@ function mmda_get_metadata($filepath){
  * @return array
  */
 function mmda_match_metadata($tika_metadata){
-  global $metadata_aliases;
   global $metadata_attributes;
+
+  $metadata_aliases = mmda_get_metadata_attributes();
   $metadata = array();
 
   //match on files
@@ -118,4 +119,35 @@ function mmda_insert_file($metadata){
   }
   return;
 
+}
+
+/**
+ * Created an array of atributes keyed by the aliases
+ * @return array aliases
+ */
+function mmda_get_metadata_attributes(){
+  global $metadata_attributes;
+  $metadata_aliases = array();
+  foreach ($metadata_attributes as $db_attribute => $db_attribute_properties) {
+    foreach ($db_attribute_properties['tika_alias'] as $tika_alias) {
+      $metadata_aliases[$tika_alias] = $db_attribute;
+    }
+  }
+
+  return $metadata_aliases;
+}
+
+/**
+ * Create and array of filterable attributes keyed by dbname
+ * @return array db_name=>displayname
+ */
+function mmda_get_filterable_attributes(){
+  global $metadata_attributes;
+  $filterable_attributes = array();
+  foreach ($metadata_attributes as $key => $properties) {
+    if($properties['filterable']){
+      $filterable_attributes[$key] = $properties['display'];
+    }
+  }
+  return $filterable_attributes;
 }

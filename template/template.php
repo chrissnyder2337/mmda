@@ -71,16 +71,15 @@ public function setTab($activeTab)
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Mulimedia Data Aggregator</a>
+          <a class="navbar-brand" href="index.php">Mulimedia Data Aggregator</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li '. (($activeTab == 1)?'class="active"':'').'><a href="index.php">Welcome</a></li>
-            <li '. (($activeTab == 2)?'class="active"':'').'><a href="add_file.php">Add File</a></li>
-            <li '. (($activeTab == 3)?'class="active"':'').'><a href="add_webpage.php">Add Webpage</a></li>
-            <li '. (($activeTab == 4)?'class="active"':'').'><a href="query_files.php">Query Metadata
-            <li '. (($activeTab == 5)?'class="active"':'').'><a href="orphan_report.php">Orphan Report</a></li>
-            <li '. (($activeTab == 6)?'class="active"':'').'><a href="time_report.php">Time Report</a></li>
+            <li '. (($activeTab == 2)?'class="active"':'').'><a href="add_file.php"><span class="glyphicon glyphicon-file"></span> Add File</a></li>
+            <li '. (($activeTab == 3)?'class="active"':'').'><a href="add_webpage.php"><span class="glyphicon glyphicon-globe"></span> Add Webpage</a></li>
+            <li '. (($activeTab == 4)?'class="active"':'').'><a href="query_files.php"><span class="glyphicon glyphicon-search"></span> Query Metadata
+            <li '. (($activeTab == 5)?'class="active"':'').'><a href="orphan_report.php"><span class="glyphicon glyphicon-list-alt"></span> Orphan Report</a></li>
+            <li '. (($activeTab == 6)?'class="active"':'').'><a href="time_report.php"><span class="glyphicon glyphicon-calendar"></span> Time Report</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
