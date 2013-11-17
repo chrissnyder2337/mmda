@@ -1,5 +1,5 @@
 <?php
-
+require_once('metadata_attributes.php');
 /**
  * Givin a file will add it to db and return results.
  */
