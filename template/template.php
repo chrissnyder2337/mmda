@@ -31,29 +31,7 @@ class MMDA_Template{
 
 public $body_prefix = '<body style="" screen_capture_injected="true">';
 
-public $nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Mulimedia Data Aggregator</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Welcome</a></li>
-            <li><a href="#about">Add File</a></li>
-            <li><a href="#contact">Add Website</a></li>
-            <li><a href="#query">Query Metadata</a></li>
-            <li><a href="#contact">Orphan Report</a></li>
-            <li><a href="#contact">Time Report</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>';
+public $nav_bar = ''
 
   public $content_prefix = '<div class="container">      <div class="starter-template">';
 
@@ -71,6 +49,34 @@ public $nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="nav
 public function setContent($content)
 {
   $this->content = $content;
+}
+
+public function setNavbar($activeTab)
+{
+  $this->nav_bar = '<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Mulimedia Data Aggregator</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li '. (($activeTab == 1)?'class="active"').'><a href="#">Welcome</a></li>
+            <li '. (($activeTab == 2)?'class="active"').'><a href="#about">Add File</a></li>
+            <li'. (($activeTab == 3)?'class="active"').'><a href="#contact">Add Website</a></li>
+            <li'. (($activeTab == 4)?'class="active"').'><a href="#query">Query Metadata</a></li>
+            <li'. (($activeTab == 5)?'class="active"').'><a href="#contact">Orphan Report</a></li>
+            <li'. (($activeTab == 6)?'class="active"').'><a href="#contact">Time Report</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>';
+
 }
 
   public function render()
