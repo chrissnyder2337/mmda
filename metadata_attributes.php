@@ -86,9 +86,9 @@ $metadata_attributes = array(
   );
 
 
-$aliases = array();
+$metadata_aliases = array();
 foreach ($metadata_attributes as $db_attribute => $db_attribute_properties) {
   foreach ($db_attribute_properties['tika_alias'] as $tika_alias) {
-    $aliases[$tika_alias] = $db_attribute;
+    $metadata_aliases[$tika_alias] = $db_attribute;
   }
 }
