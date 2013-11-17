@@ -8,7 +8,7 @@ class TikaWrapper
     {
 
         $dir = __DIR__.'/';
-        $command = 'java -jar '.$dir.'tika-app-1.4.jar '.$option.' '.$filepath;
+        $command = 'java -jar '.$dir.'tika-app-1.4.jar '.$option.' '.escapeshellarg($filepath);
 
 
         exec($command,$output,$return_var);
