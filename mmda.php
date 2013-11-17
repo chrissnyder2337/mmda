@@ -3,7 +3,7 @@ require_once('metadata_attributes.php');
 /**
  * Givin a file will add it to db and return results.
  */
-function mmda_add_file($filepath, $externalfilepath = NULL){
+function mmda_add_file($filepath, $is_external = FALSE){
   global $db;
 
   //get hash of file
@@ -25,22 +25,25 @@ function mmda_add_file($filepath, $externalfilepath = NULL){
     }
 
     // add File table specific information
-    $metadata['File']['local_path'] = $filepath;
 
-    if(!empty($externalfilepath)){
-      $metadata['File']['external_path'] = $externalfilepath;
+
+    if($is_external){
+      $metadata['File']['external_path'] = $filepath;
+    } else{
+      $metadata['File']['local_path'] = $filepath;
     }
 
     $metadata['File']['md5_hash'] = $file_hash;
 
     //insert into
     mmda_insert_file($metadata);
-
-    return "This file's DAGR was inserted with the id <b>".$uuid."</b>";
-
     print "<pre>";
     print_r($metadata);
     print "</pre>";
+
+    return "This file's DAGR was inserted with the id <b>".$uuid."</b>";
+
+
   }else{
     return "File already in db";
   }
