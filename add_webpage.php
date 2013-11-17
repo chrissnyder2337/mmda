@@ -2,7 +2,7 @@
 require_once ('load_libraries.php');
 
 $add_webpage_form = '
-<form class="form-horizontal">
+<form class="form-horizontal" action="add_webpage.php" method="post" enctype="multipart/form-data">
 <fieldset>
 
 <!-- Form Name -->
@@ -12,8 +12,7 @@ $add_webpage_form = '
 <div class="form-group">
   <label class="col-md-4 control-label" for="URLinput">URL</label>  
   <div class="col-md-4">
-  <input id="URLinput" name="URLinput" placeholder="" class="form-control input-md" required="" type="text">
-    
+  <input id="url" name="urltoadd" required="You must specify a URL" class="form-control input-md" type="text">
   </div>
 </div>
 
@@ -21,7 +20,7 @@ $add_webpage_form = '
 <div class="form-group">
   <label class="col-md-4 control-label" for="submit"></label>
   <div class="col-md-4">
-    <button id="submit" name="submit" class="btn btn-primary">Submit</button>
+    <button id="submit" name="submit" value="inserturl" class="btn btn-primary">Submit</button>
   </div>
 </div>
 
@@ -29,6 +28,13 @@ $add_webpage_form = '
 </form>
 ';
 
-$template->setContent($add_webpage_form);
+if(isset($_POST['submit']) && $_POST['submit'] == 'inserturl'){
+  $array = mmda_get_webpage_content($_POST['urltoadd']);
+  var_dump($array);
+}else{
+  $template->setContent($add_webpage_form);
+}
+
+
 $template->setTab(3);
 $template->render();
