@@ -60,7 +60,6 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'insertfile'){
   }else{
     $results .= '<div class="alert alert-danger"> Was not able to upload. <a href="add_file.php" class="alert-link">Try Again</a></div>';
   }
-
   $template->setContent($results);
 }else{
   //show form
