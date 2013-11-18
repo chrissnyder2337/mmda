@@ -65,6 +65,10 @@ function mmda_get_metadata($filepath){
 
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
+  
+  print '<pre>';
+  print_r($tika_metadata);
+  print '</pre>';
   $metadata = mmda_match_metadata($tika_metadata);
   return $metadata;
 
@@ -239,6 +243,13 @@ function mmda_get_tables(){
   }
   return array_values($tables);
 }
+
+/* 
+ * Determine if URL is valid
+ */
+function mmda_isValidURL($url){
+        return preg_match('#^(?:https?|ftp)://#', $url);
+}
 /*
  * Parses through all downloadable content of the given webpage.
  * @return array urls
@@ -248,13 +259,19 @@ function mmda_get_webpage_content($url){
   $content = array();
   // Find all images
   foreach($html->find('img') as $element){
-    if (substr($element->src,0,1) == "/") $element->src = $url . $element->src;
-    $content[] = $element->src;
+    if (!preg_match('/^mailto/',$element->src)){
+      if (!mmda_isValidURL($element->src))
+        $element->src = $url.$element->src;
+      $content[] = $element->src;
+    }
   }
   // Find all links
   foreach($html->find('a') as $element){
-    if (substr($element->href,0,1) == "/") $element->href = $url . $element->src;
-    $content[] = $element->href;
+    if (!preg_match('/^mailto/',$element->href)){
+      if (!mmda_isValidURL($element->href))
+        $element->href = $url.$element->href;
+      $content[] = $element->href;
+    }
   }
-  return $content;
+  return array_unique($content);
 }

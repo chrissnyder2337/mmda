@@ -29,8 +29,15 @@ $add_webpage_form = '
 ';
 
 if(isset($_POST['submit']) && $_POST['submit'] == 'inserturl'){
-  $array = mmda_get_webpage_content($_POST['urltoadd']);
-  var_dump($array);
+  $results = '';
+  $url = $_POST['urltoadd'];
+  if (mmda_isValidURL($url)){
+    $array = mmda_get_webpage_content($url);
+    $results .= var_dump($array);
+  } else {
+    $results .= '<div class="alert alert-danger">URL is not valid.</a></div><a href="add_webpage.php" class="alert-link">Try Again</a>';
+  }
+  $template->setContent($results);
 }else{
   $template->setContent($add_webpage_form);
 }
