@@ -65,6 +65,10 @@ function mmda_get_metadata($filepath){
 
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
+  
+  print '<pre>';
+  print_r($tika_metadata);
+  print '</pre>';
   $metadata = mmda_match_metadata($tika_metadata);
   return $metadata;
 
