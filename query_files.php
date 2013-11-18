@@ -1,16 +1,16 @@
-<?php 
+<?php
 require_once ('load_libraries.php');
 
 function get_attributeoptions(){
- 
+
   $attribute_options = '';
 
   $attributes = mmda_get_filterable_attributes();
-  
+
   foreach($attributes as $dbattr => $displayattr){
     $attribute_options .= '<option value="'.$dbattr.'">'.$displayattr.'</option>';
   }
-  
+
   return $attribute_options;
 }
 
@@ -54,7 +54,7 @@ $query_form = '
       var objTo = document.getElementById("criteria_field")
       var divtest = document.createElement("div");
       divtest.innerHTML =document.getElementById("criteria_field_template").innerHTML;
-      
+
       objTo.appendChild(divtest)
   }
 </script>
@@ -78,7 +78,7 @@ $query_form = '
 <div class="form-group">
   <label class="col-md-4 control-label" for="query"></label>
   <div class="col-md-4">
-    <button id="query" name="query" class="btn btn-primary">Query</button>
+    <button id="query" name="submit" value="query" class="btn btn-primary">Query</button>
   </div>
 </div>
 
@@ -86,6 +86,14 @@ $query_form = '
 </form>
 ';
 
-$template->setContent($query_form);
+
+if(isset($_GET['submit']) && $_GET['submit'] == 'query'){
+
+
+}else{
+  $template->setContent($query_form);
+}
+
+
 $template->setTab(4);
 $template->render();
