@@ -60,6 +60,8 @@ CREATE TABLE `AuthoringMetadata` (
   `uuid` varchar(64) NOT NULL,
   `created_date` timestamp NULL DEFAULT NULL,
   `last_modified_date` timestamp NULL DEFAULT NULL,
+  `author` varchar(32) NOT NULL,
+  `title` varchar(32) NOT NULL,
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -288,4 +290,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-17 12:23:03
+-- Dump completed on 2013-11-17 22:30:18
