@@ -65,7 +65,7 @@ function mmda_get_metadata($filepath){
 
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
-  
+
   print '<pre>';
   print_r($tika_metadata);
   print '</pre>';
@@ -244,7 +244,7 @@ function mmda_get_tables(){
   return array_values($tables);
 }
 
-/* 
+/*
  * Determine if URL is valid
  */
 function mmda_isValidURL($url){
@@ -274,4 +274,107 @@ function mmda_get_webpage_content($url){
     }
   }
   return array_unique($content);
+}
+
+function mmda_get_time_report($startDate,$endDate){
+  $db = db_connect();
+
+  // convert mm/dd/yyyy to appropriate format
+  $mysql_startDate = date('Y-m-d H:i:s', strtotime(str_replace('-', '/', $startDate)));
+  $mysql_endDate = date('Y-m-d H:i:s', strtotime(str_replace('-', '/', $endDate)));
+
+  $sql = "SELECT *
+    FROM File
+      LEFT JOIN AudioMetadata on AudioMetadata.uuid = File.uuid
+      LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
+      LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
+      LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN FileReferences on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
+      LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
+      LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+    WHERE
+      File.file_added_timestamp >= ?
+      and File.file_added_timestamp < ?";
+
+  $query = $db->query($sql,array($mysql_startDate,$mysql_endDate));
+
+
+  $results = $query->fetchAllArray();
+
+  return $results;
+
+}
+
+
+/**
+ * format html of result table.
+ * @param  array $results to be formatted
+ * @return string          html table
+ */
+function mmda_format_result_table($results){
+  global $metadata_attributes;
+  $html = '<div style="overflow: auto"><table class="table table-bordered" >';
+
+  //HEAD OF TABLE
+  $html .= '<thead><tr>';
+  foreach ($results[0] as $key => $value) {
+    //get printable collum name from table if possible
+    if(isset($metadata_attributes[$key]) && isset($metadata_attributes[$key]['display'])){
+      $label = $metadata_attributes[$key]['display'];
+    }else{
+      $label = $key;
+    }
+    $html .= '<th>'.$label.'</th>';
+  }
+  $html .= '</tr><thead>';
+  //END HEAD OF TABLE
+
+  //BODY OF TABLE
+  $html .= '<tbody>';
+  foreach ($results as $key => $row) {
+    $html .= '<tr>';
+    foreach ($row as $key => $value) {
+      $html .= '<td>'.$value.'</td>';
+    }
+    $html .= '</tr>';
+  }
+
+
+  $html .= '</tbody>';
+  //END BODY OF TABLE
+  $html .= '</table></div>';
+
+
+
+  //add datatables call
+  return $html;
+
+}
+
+function mmda_remove_empty_columns($results){
+
+  $num_rows = count($results);
+  $column_count = array();
+  foreach ($results as $row) {
+    foreach ($row as $column => $value) {
+      if(empty($value)){
+        if(!isset($column_count[$column])){
+          $column_count[$column]=0;
+        }
+        $column_count[$column]++;
+      }
+    }
+  }
+
+
+  foreach ($results as &$row) {
+    foreach ($column_count as $column => $count) {
+      print($count);
+      if($count == $num_rows){
+        unset($row[$column]);
+      }
+    }
+  }
+  return $results;
 }
