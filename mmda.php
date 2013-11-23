@@ -314,7 +314,7 @@ function mmda_get_time_report($startDate,$endDate){
  */
 function mmda_format_result_table($results){
   global $metadata_attributes;
-  $html = '<table id="result-table" class="table table-striped table-bordered">';
+  $html = '<div style="overflow: auto"><table class="table table-bordered" >';
 
   //HEAD OF TABLE
   $html .= '<thead><tr>';
@@ -343,8 +343,38 @@ function mmda_format_result_table($results){
 
   $html .= '</tbody>';
   //END BODY OF TABLE
-  $html .= '</table>';
+  $html .= '</table></div>';
 
+
+
+  //add datatables call
   return $html;
 
+}
+
+function mmda_remove_empty_columns($results){
+
+  $num_rows = count($results);
+  $column_count = array();
+  foreach ($results as $row) {
+    foreach ($row as $column => $value) {
+      if(empty($value)){
+        if(!isset($column_count[$column])){
+          $column_count[$column]=0;
+        }
+        $column_count[$column]++;
+      }
+    }
+  }
+
+
+  foreach ($results as &$row) {
+    foreach ($column_count as $column => $count) {
+      print($count);
+      if($count == $num_rows){
+        unset($row[$column]);
+      }
+    }
+  }
+  return $results;
 }

@@ -52,7 +52,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'runtimereport'){
    // print "<pre>";
    //print_r($time_report);
    // print "</pre>";
+    $time_report = mmda_remove_empty_columns($time_report);
       $content .= mmda_format_result_table($time_report);
+
   }else{
    $content .= '<div class="alert alert-danger">You need to supply a valid start and end date</a></div>';
   }
