@@ -1,6 +1,7 @@
 <?php
 require_once ('load_libraries.php');
 
+
 $add_file_form = '
 <form class="form-horizontal" action="add_file.php" method="post" enctype="multipart/form-data">
 <fieldset>
