@@ -164,6 +164,50 @@ function mmda_get_file($uuid){
 
 }
 
+/**
+ * Get a list of all dagrs keyed by uuid
+ * @return array dagrs
+ */
+function mmda_get_dagrs_list(){
+  $db = db_connect();
+
+  $sql = "SELECT File.uuid, File.resource_name, File.anotated_name
+    FROM File";
+
+  $query = $db->query($sql);
+
+  $results = $query->fetchAllArray();
+
+  $dagrs = array();
+
+  foreach ($results as $row) {
+    $dagrs[$row['uuid']] = $row['anotated_name'] . "(" . $row['resource_name'] .")";
+  }
+
+  return $dagrs;
+}
+
+/**
+ * returns the option html for all of the dagrs
+ * @param  string $default_uuid uuid of option to be selected
+ * @return string               options html
+ */
+function mmda_get_dagrs_list_select_options($default_uuid = NULL){
+  $dagrs = mmda_get_dagrs_list();
+
+  $dagrs_option_html = '';
+
+  foreach ($dagrs as $uuid => $name) {
+    $dagrs_option_html .= '<option value="'.$uuid."' ";
+    if($default_uuid != NULL && $default_uuid == $uuid){
+      $dagrs_option_html .= "selected='selected'";
+    }
+    $dagrs_option_html .= ">".$name."</option>\n";
+  }
+
+  return $dagrs_option_html;
+}
+
 function mmda_get_dagr_html($uuid){
   global $metadata_attributes;
   $file_metadata = mmda_get_file($uuid);
