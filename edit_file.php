@@ -11,7 +11,7 @@ if(isset($_GET['uuid'])){
   if($dagr){
 
     //start making the edit form
-    $edit_file_form = '<form class="form-horizontal">
+    $edit_file_form = '<form class="form-horizontal" method="post">
     <fieldset>';
 
     //define form name
@@ -61,8 +61,10 @@ if(isset($_GET['uuid'])){
     $edit_file_form .= '<!-- Button -->
   <div class="form-group">
     <label class="col-md-4 control-label" for="singlebutton"></label>
-    <div class="col-md-4">
-      <button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
+    <div class="col-md-8">
+          <button id="button2id" name="delete" class="btn btn-danger">Delete DAGR</button>
+      <button id="singlebutton" name="singlebutton" class="btn btn-primary">Save Changes</button>
+
     </div>
   </div>';
 
@@ -75,40 +77,13 @@ if(isset($_GET['uuid'])){
 
 
     $content .= $edit_file_form;
+
+
+    //get viewable dagr
+    $content .= mmda_get_dagr_html($uuid);
   }else{
     $content = '<div class="alert alert-danger"> DAGR with UUID of '.$uuid.' not found.</a></div>';
   }
-
-  $edit_file_form = '
-  <form class="form-horizontal">
-  <fieldset>
-
-  <!-- Form Name -->
-  <legend>Edit DAGR (UUID: 4567-56789-567s678-45678)</legend>
-
-
-
-  <!-- Text input-->
-  <div class="form-group">
-    <label class="col-md-4 control-label" for="keywords">Keywords</label>
-    <div class="col-md-5">
-    <input id="keywords" name="keywords" type="text" placeholder="keywords" class="form-control input-md">
-    <span class="help-block">Comma Seperated</span>
-    </div>
-  </div>
-
-  <!-- Button -->
-  <div class="form-group">
-    <label class="col-md-4 control-label" for="singlebutton"></label>
-    <div class="col-md-4">
-      <button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
-    </div>
-  </div>
-
-  </fieldset>
-  </form>
-
-  ';
 
 } else{
   $content = '<div class="alert alert-danger"> UUID not specified.</a></div>';

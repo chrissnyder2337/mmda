@@ -240,7 +240,7 @@ function mmda_get_dagr_html($uuid){
   <div class="panel-heading">
   <h3 class="panel-title"><span class="glyphicon glyphicon-file"></span> '.$filename.'</h3> ('.$uuid.')</div>
   <div class="panel-body">
-    <a href="#">Download</a> | <a href="#">Edit</a> | <a href="#">Remove DAGR</a>
+    <a href="#">Download</a> | <a href="#">Remove DAGR</a>
   </div>
 
   <!-- List group -->
