@@ -1,85 +1,96 @@
 <?php
 require_once ('load_libraries.php');
 
-$edit_file_form = '
-<form class="form-horizontal">
-<fieldset>
+$content = '';
+if(isset($_GET['uuid'])){
+  $uuid = $_GET['uuid'];
 
-<!-- Form Name -->
-<legend>Edit DAGR (UUID: 4567-56789-567s678-45678)</legend>
+  $dagr = mmda_get_file($uuid);
 
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="annottatedname">Annotated Name</label>
-  <div class="col-md-4">
-  <input id="annottatedname" name="annottatedname" type="text" placeholder="Annotated Name" class="form-control input-md">
+  //check if dagr was actually found.
+  if($dagr){
 
-  </div>
-</div>
+    //start making the edit form
+    $edit_file_form = '<form class="form-horizontal" method="post">
+    <fieldset>';
 
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="keywords">Keywords</label>
-  <div class="col-md-5">
-  <input id="keywords" name="keywords" type="text" placeholder="keywords" class="form-control input-md">
-  <span class="help-block">Comma Seperated</span>
-  </div>
-</div>
+    //define form name
+    $edit_file_form .= '  <!-- Form Name -->
+    <legend>Edit DAGR (UUID: '.$uuid.')</legend>';
 
-<!-- Button -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="singlebutton"></label>
-  <div class="col-md-4">
-    <button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
-  </div>
-</div>
+    //define anotated name form
+    $edit_file_form .= '<!-- Text input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="anotated_name">Anotated Name</label>
+      <div class="col-md-4">
+      <input id="annottatedname" name="annottatedname" type="text" placeholder="Annotated Name" value="'.$dagr['anotated_name'].'" class="form-control input-md">
+      </div>
+    </div>';
 
-</fieldset>
-</form>
-
-';
-
-
-if(isset($_POST['submit']) && $_POST['submit'] == 'editfile'){
-  $results = '';
-
-  //add file into tika
-  if(!empty($_FILES) && !empty($_FILES['filetoadd'])){
-
-
-    //move uploaded file to more permenat location.
-    $uploadedfile = $upload_dir . $_FILES['filetoadd']['name'];
-    if (move_uploaded_file($_FILES['filetoadd']['tmp_name'], $uploadedfile)) {
-
-      $dagr_uuid = mmda_add_file($uploadedfile);
-
-      if($dagr_uuid){
-        $results .= '<div class="alert alert-success">This file\'s DAGR was inserted with the id <b>'.$dagr_uuid.'</b></div>';
-
-        $results .= mmda_get_dagr_html($dagr_uuid);
-
-      }else{
-        $results .= '<div class="alert alert-danger"> File already in db.</a></div>';
-      }
-
-
-    } else {
-      $results .= '<div class="alert alert-danger"> Was not able to add. Possible upload attack <a href="add_file.php" class="alert-link">Try Again</a></div>';
+    //define parent uuid select list
+    $parent_uuid = mmda_get_parent_uuid($uuid);
+    if($parent_uuid){
+      $parent_uuid_options = mmda_get_dagrs_list_select_options($parent_uuid);
+    }else{
+      $parent_uuid_options = mmda_get_dagrs_list_select_options();
     }
+    $edit_file_form .= '<!-- Select Basic -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="parent_uuid">Parent DAGR</label>
+      <div class="col-md-5">
+        <select id="parent_uuid" name="parent_uuid" class="form-control">
+          <option value ="">--- NONE ---</option>
+          '.$parent_uuid_options.'
+        </select>
+      </div>
+    </div>';
 
 
+    //define keyword edit.
+    $edit_file_form .= ' <!-- Text input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="keywords">Keywords</label>
+      <div class="col-md-5">
+      <input id="keywords" name="keywords" type="text" placeholder="keywords" class="form-control input-md">
+      <span class="help-block">Comma Seperated</span>
+      </div>
+    </div>';
+
+
+    //define the submit button
+    $edit_file_form .= '<!-- Button -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="singlebutton"></label>
+    <div class="col-md-8">
+          <button id="button2id" name="delete" class="btn btn-danger">Delete DAGR</button>
+      <button id="singlebutton" name="singlebutton" class="btn btn-primary">Save Changes</button>
+
+    </div>
+  </div>';
+
+    //print_r($dagr);
+
+
+    //end form
+    $edit_file_form .= '  </fieldset>
+    </form>';
+
+
+    $content .= $edit_file_form;
+
+
+    //get viewable dagr
+    $content .= mmda_get_dagr_html($uuid);
   }else{
-    $results .= '<div class="alert alert-danger"> Was not able to upload. <a href="add_file.php" class="alert-link">Try Again</a></div>';
+    $content = '<div class="alert alert-danger"> DAGR with UUID of '.$uuid.' not found.</a></div>';
   }
 
-  $template->setContent($results);
-}else{
-  //show form
-  $template->setContent($edit_file_form);
+} else{
+  $content = '<div class="alert alert-danger"> UUID not specified.</a></div>';
 }
 
 
-
+$template->setContent($content);
 $template->setTab(2);
 $template->render();
 

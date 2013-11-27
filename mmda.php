@@ -66,9 +66,6 @@ function mmda_get_metadata($filepath){
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
 
-  print '<pre>';
-  print_r($tika_metadata);
-  print '</pre>';
   $metadata = mmda_match_metadata($tika_metadata);
   return $metadata;
 
@@ -160,8 +157,31 @@ function mmda_get_file($uuid){
 
   $results = $query->fetchAllArray();
 
-  return $results[0];
+  if(isset($results[0])){
+    return $results[0];
+  }else{
+    return false;
+  }
+}
 
+/**
+ * Get the parent dagr's uuid
+ * @return [type] [description]
+ */
+function mmda_get_parent_uuid($uuid){
+  $db = db_connect();
+
+  $sql = "SELECT parent_uuid from FileReferences where child_uuid = ?";
+
+  $query = $db->query($sql, array($uuid));
+
+  $results = $query->fetchAllArray();
+
+  if(isset($results[0])){
+    return $results[0]['parent_uuid'];
+  }else{
+    return false;
+  }
 }
 
 /**
@@ -181,7 +201,7 @@ function mmda_get_dagrs_list(){
   $dagrs = array();
 
   foreach ($results as $row) {
-    $dagrs[$row['uuid']] = $row['anotated_name'] . "(" . $row['resource_name'] .")";
+    $dagrs[$row['uuid']] = $row['anotated_name'] . " (" . $row['resource_name'] .")";
   }
 
   return $dagrs;
@@ -198,7 +218,7 @@ function mmda_get_dagrs_list_select_options($default_uuid = NULL){
   $dagrs_option_html = '';
 
   foreach ($dagrs as $uuid => $name) {
-    $dagrs_option_html .= '<option value="'.$uuid."' ";
+    $dagrs_option_html .= '<option value="'.$uuid.'" ';
     if($default_uuid != NULL && $default_uuid == $uuid){
       $dagrs_option_html .= "selected='selected'";
     }
@@ -220,7 +240,7 @@ function mmda_get_dagr_html($uuid){
   <div class="panel-heading">
   <h3 class="panel-title"><span class="glyphicon glyphicon-file"></span> '.$filename.'</h3> ('.$uuid.')</div>
   <div class="panel-body">
-    <a href="#">Download</a> | <a href="#">Edit</a> | <a href="#">Remove DAGR</a>
+    <a href="#">Download</a> | <a href="#">Remove DAGR</a>
   </div>
 
   <!-- List group -->
