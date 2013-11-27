@@ -46,7 +46,9 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'insertfile'){
       if($dagr_uuid){
         $results .= '<div class="alert alert-success">This file\'s DAGR was inserted with the id <b>'.$dagr_uuid.'</b></div>';
 
-        $results .= mmda_get_dagr_html($dagr_uuid);
+        $results .= '<a href="edit_file.php?uuid='.$dagr_uuid.'" class="btn btn-primary btn-large">Continue <i class="icon-white icon-circle-arrow-right"></i></a>';
+
+        //$results .= mmda_get_dagr_html($dagr_uuid);
 
       }else{
         $results .= '<div class="alert alert-danger"> File already in db.</a></div>';
