@@ -3,7 +3,23 @@ require_once ('load_libraries.php');
 
 $content = '';
 if(isset($_GET['uuid'])){
+
   $uuid = $_GET['uuid'];
+
+  //TODO do all changes here.
+
+  if(isset($_POST['anotated_name'])){
+    mmda_update_anotated_name($uuid,$_POST['anotated_name']);
+  }
+
+  if(isset($_POST['parent_uuid'])){
+    mmda_update_parent_uuid($uuid,$_POST['parent_uuid']);
+  }
+
+
+  // if(isset($_POST['keywords']){
+  //   //update keywords here
+  // }
 
   $dagr = mmda_get_file($uuid);
 
@@ -23,7 +39,7 @@ if(isset($_GET['uuid'])){
     <div class="form-group">
       <label class="col-md-4 control-label" for="anotated_name">Anotated Name</label>
       <div class="col-md-4">
-      <input id="annottatedname" name="annottatedname" type="text" placeholder="Annotated Name" value="'.$dagr['anotated_name'].'" class="form-control input-md">
+      <input id="anotated_name" name="anotated_name" type="text" placeholder="Annotated Name" value="'.$dagr['anotated_name'].'" class="form-control input-md">
       </div>
     </div>';
 
