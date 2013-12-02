@@ -228,6 +228,22 @@ function mmda_get_dagrs_list_select_options($default_uuid = NULL){
   return $dagrs_option_html;
 }
 
+/**
+ * Update anotated name
+ * @param  string $uuid          [description]
+ * @param  string $anotated_name [description]
+ * @return [type]                [description]
+ */
+function mmda_update_anotated_name($uuid, $anotated_name){
+  $db = db_connect();
+
+  $sql = "UPDATE File
+    SET File.anotated_name = ?
+    WHERE File.uuid = ?";
+
+  $query = $db->query($sql,array($anotated_name,$uuid));
+}
+
 function mmda_get_dagr_html($uuid){
   global $metadata_attributes;
   $file_metadata = mmda_get_file($uuid);
