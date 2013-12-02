@@ -63,6 +63,7 @@ if(isset($_GET['uuid'])){
 
 
     //define keyword edit.
+    //TODO: maybe implement something like this: http://jqueryui.com/autocomplete/#multiple
     $edit_file_form .= ' <!-- Text input-->
     <div class="form-group">
       <label class="col-md-4 control-label" for="keywords">Keywords</label>
