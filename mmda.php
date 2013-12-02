@@ -244,6 +244,21 @@ function mmda_update_anotated_name($uuid, $anotated_name){
   $query = $db->query($sql,array($anotated_name,$uuid));
 }
 
+
+function mmda_update_parent_uuid($uuid,$parent_uuid){
+  $db = db_connect();
+
+  //Delete old parent reference
+  $sql = "DELETE FROM  FileReferences
+    WHERE FileReferences.child_uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  //Add new parent reference
+  $sql = "INSERT INTO FileReferences (parent_uuid, child_uuid) VALUES (?, ?)";
+  $query = $db->query($sql,array($parent_uuid,$uuid));
+
+}
+
 function mmda_get_dagr_html($uuid){
   global $metadata_attributes;
   $file_metadata = mmda_get_file($uuid);
