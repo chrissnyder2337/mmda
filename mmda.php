@@ -227,6 +227,31 @@ function mmda_get_parent_uuid($uuid){
 }
 
 /**
+ * Returns an array of children uuids
+ * @param  [type] $uuid [description]
+ * @return [type]       [description]
+ */
+function mmda_get_children_uuids($uuid){
+  $db = db_connect();
+
+  $sql = "SELECT child_uuid from FileReferences where parent_uuid = ?";
+
+  $query = $db->query($sql, array($uuid));
+
+  $results = $query->fetchAllArray();
+
+  if(isset($results[0])){
+    $child_uuids = array();
+    foreach ($results as $row) {
+      $child_uuids[]  = $row['child_uuid'];
+    }
+    return $child_uuids;
+  }else{
+    return array();
+  }
+}
+
+/**
  * get the html of a single dagr listing
  *
  * this includes the filename, and the edit and delete button
@@ -243,7 +268,7 @@ function mmda_get_dagr_single_html($uuid){
   $query = $db->query($sql,array($uuid));
 
   $results = $query->fetchAllArray();
-  print_r($results);
+
   if(isset($results[0])){
     return '<div class="dagr-item">'. $results[0]['anotated_name']
       . ' (' . $results[0]['resource_name'] .')'
@@ -349,7 +374,7 @@ function mmda_get_dagr_html($uuid){
   }else{
     $parent_item_html = ' - NO PARENT - ';
   }
-   // print_r($parent_uuid);
+
   $parent_panel_html = '
   <div class="panel panel-default">
     <!-- Default panel contents -->
@@ -359,6 +384,32 @@ function mmda_get_dagr_html($uuid){
     </h3></div>
     <div class="panel-body">
     '.$parent_item_html.'
+    </div>
+  </div>
+  ';
+
+  //CREATE CHILDREN DAGR PANEL
+  $child_uuids = mmda_get_children_uuids($uuid);
+
+  $children_item_html = '';
+
+  if(!empty($child_uuids)){
+    foreach ($child_uuids as $child_uuid) {
+      $children_item_html .= mmda_get_dagr_single_html($child_uuid);
+    }
+  }else{
+    $children_item_html = ' - NO CHILDREN - ';
+  }
+
+  $children_panel_html = '
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="glyphicon glyphicon-file"></span> Chilren DAGRs
+          </h3></div>
+    <div class="panel-body">
+    '.$children_item_html.'
     </div>
   </div>
   ';
@@ -393,7 +444,10 @@ function mmda_get_dagr_html($uuid){
   $attr_html .= '</ul></div>';
 
 
-  $html = $parent_panel_html. $attr_html;
+  $html = '<div class="row">
+    <div class="col-md-6">'. $attr_html.'</div>
+    <div class="col-md-6">'. $parent_panel_html.$children_panel_html.' </div>
+    </div>';
   return $html;
 }
 
