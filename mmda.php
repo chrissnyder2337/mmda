@@ -578,12 +578,36 @@ function mmda_get_orphan_report(){
       FileReferences.parent_uuid IS NULL";
 
   $query = $db->query($sql);
-
-
   $results = $query->fetchAllArray();
 
   return $results;
+}
 
+/**
+ * Return the orphan Report
+ * @return [type] [description]
+ */
+function mmda_get_sterile_report(){
+  $db = db_connect();
+
+
+  $sql = "SELECT *
+    FROM File
+      LEFT JOIN AudioMetadata on AudioMetadata.uuid = File.uuid
+      LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
+      LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
+      LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
+      LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
+      LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN FileReferences on File.uuid = FileReferences.parent_uuid
+    WHERE
+      FileReferences.child_uuid IS NULL";
+
+  $query = $db->query($sql);
+  $results = $query->fetchAllArray();
+
+  return $results;
 }
 
 /**
