@@ -175,11 +175,6 @@ function mmda_get_keywords($uuid){
   $query = $db->query($sql, array($uuid));
   $results = $query->fetchAllArray();
 
-  print "<pre>";
-  print_r($results);
-  print "</pre>";
-
-  //TODO... make work with multiple values.
   if(isset($results[0])){
     //complile results into array
     $keywords = array();
