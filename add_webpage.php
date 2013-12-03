@@ -1,5 +1,7 @@
-<?php 
+<?php
 require_once ('load_libraries.php');
+
+$url = (!empty($_GET['url']))?$_GET['url']:"";
 
 $add_webpage_form = '
 <form class="form-horizontal" action="add_webpage.php" method="post" enctype="multipart/form-data">
@@ -10,9 +12,9 @@ $add_webpage_form = '
 
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="URLinput">URL</label>  
+  <label class="col-md-4 control-label" for="URLinput"></label>
   <div class="col-md-4">
-  <input id="url" name="urltoadd" required="You must specify a URL" class="form-control input-md" type="text">
+  <input id="url" name="urltoadd" required="You must specify a URL" class="form-control input-md" type="text" value="'.$url.'">
   </div>
 </div>
 
