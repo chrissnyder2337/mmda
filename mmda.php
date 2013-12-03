@@ -227,6 +227,31 @@ function mmda_get_parent_uuid($uuid){
 }
 
 /**
+ * Returns an array of children uuids
+ * @param  [type] $uuid [description]
+ * @return [type]       [description]
+ */
+function mmda_get_children_uuids($uuid){
+  $db = db_connect();
+
+  $sql = "SELECT child_uuid from FileReferences where parent_uuid = ?";
+
+  $query = $db->query($sql, array($uuid));
+
+  $results = $query->fetchAllArray();
+
+  if(isset($results[0])){
+    $child_uuids = array();
+    foreach ($results as $row) {
+      $child_uuids[]  = $row['child_uuid'];
+    }
+    return $child_uuids;
+  }else{
+    return array();
+  }
+}
+
+/**
  * get the html of a single dagr listing
  *
  * this includes the filename, and the edit and delete button
@@ -243,7 +268,7 @@ function mmda_get_dagr_single_html($uuid){
   $query = $db->query($sql,array($uuid));
 
   $results = $query->fetchAllArray();
-  print_r($results);
+
   if(isset($results[0])){
     return '<div class="dagr-item">'. $results[0]['anotated_name']
       . ' (' . $results[0]['resource_name'] .')'
@@ -349,7 +374,7 @@ function mmda_get_dagr_html($uuid){
   }else{
     $parent_item_html = ' - NO PARENT - ';
   }
-   // print_r($parent_uuid);
+
   $parent_panel_html = '
   <div class="panel panel-default">
     <!-- Default panel contents -->
@@ -359,6 +384,32 @@ function mmda_get_dagr_html($uuid){
     </h3></div>
     <div class="panel-body">
     '.$parent_item_html.'
+    </div>
+  </div>
+  ';
+
+  //CREATE CHILDREN DAGR PANEL
+  $child_uuids = mmda_get_children_uuids($uuid);
+
+  $children_item_html = '';
+
+  if(!empty($child_uuids)){
+    foreach ($child_uuids as $child_uuid) {
+      $children_item_html .= mmda_get_dagr_single_html($child_uuid);
+    }
+  }else{
+    $children_item_html = ' - NO CHILDREN - ';
+  }
+
+  $children_panel_html = '
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="glyphicon glyphicon-file"></span> Children DAGRs
+          </h3></div>
+    <div class="panel-body">
+    '.$children_item_html.'
     </div>
   </div>
   ';
@@ -393,7 +444,10 @@ function mmda_get_dagr_html($uuid){
   $attr_html .= '</ul></div>';
 
 
-  $html = $parent_panel_html. $attr_html;
+  $html = '<div class="row">
+    <div class="col-md-6">'. $attr_html.'</div>
+    <div class="col-md-6">'. $parent_panel_html.$children_panel_html.' </div>
+    </div>';
   return $html;
 }
 
@@ -503,6 +557,60 @@ function mmda_get_time_report($startDate,$endDate){
 }
 
 /**
+ * Return the orphan Report
+ * @return [type] [description]
+ */
+function mmda_get_orphan_report(){
+  $db = db_connect();
+
+
+  $sql = "SELECT *
+    FROM File
+      LEFT JOIN AudioMetadata on AudioMetadata.uuid = File.uuid
+      LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
+      LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
+      LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
+      LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
+      LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN FileReferences on File.uuid = FileReferences.child_uuid
+    WHERE
+      FileReferences.parent_uuid IS NULL";
+
+  $query = $db->query($sql);
+  $results = $query->fetchAllArray();
+
+  return $results;
+}
+
+/**
+ * Return the orphan Report
+ * @return [type] [description]
+ */
+function mmda_get_sterile_report(){
+  $db = db_connect();
+
+
+  $sql = "SELECT *
+    FROM File
+      LEFT JOIN AudioMetadata on AudioMetadata.uuid = File.uuid
+      LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
+      LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
+      LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
+      LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
+      LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN FileReferences on File.uuid = FileReferences.parent_uuid
+    WHERE
+      FileReferences.child_uuid IS NULL";
+
+  $query = $db->query($sql);
+  $results = $query->fetchAllArray();
+
+  return $results;
+}
+
+/**
  * Delete a dagr from the database.
  * @param  [type] $uuid [description]
  * @return [type]       [description]
@@ -557,7 +665,7 @@ function mmda_delete_dagr($uuid){
  */
 function mmda_format_result_table($results){
   global $metadata_attributes;
-  $html = '<div style="overflow: auto"><table class="table table-bordered" >';
+  $html = '<div class="table-responsive" style="overflow:auto; font-size:.7em"><table class="table table-striped table-condensed" >';
 
   //HEAD OF TABLE
   $html .= '<thead><tr>';
@@ -578,7 +686,12 @@ function mmda_format_result_table($results){
   foreach ($results as $key => $row) {
     $html .= '<tr>';
     foreach ($row as $key => $value) {
-      $html .= '<td>'.$value.'</td>';
+      if($key == 'uuid'){
+         $html .= '<td>'.$value. ' <a href="edit_file.php?uuid='.$value.'"> <span class="glyphicon glyphicon-edit"> </span> Edit </a> '
+      . '<a href="delete_file.php?uuid='.$value.'"> <span class="glyphicon glyphicon-trash"> </span> Delete </a> </div>'.' </td>';
+      }else{
+        $html .= '<td>'.$value.'</td>';
+      }
     }
     $html .= '</tr>';
   }
@@ -613,7 +726,6 @@ function mmda_remove_empty_columns($results){
 
   foreach ($results as &$row) {
     foreach ($column_count as $column => $count) {
-      print($count);
       if($count == $num_rows){
         unset($row[$column]);
       }

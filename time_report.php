@@ -65,5 +65,5 @@ if(isset($_GET['action']) && $_GET['action'] == 'runtimereport'){
 }
 
 $template->setContent($content);
-$template->setTab(6 );
+$template->setTab(7);
 $template->render();
