@@ -86,10 +86,17 @@ public function setTab($activeTab)
           <ul class="nav navbar-nav">
             <li '. (($activeTab == 2)?'class="active"':'').'><a href="add_file.php"><span class="glyphicon glyphicon-file"></span> Add File</a></li>
             <li '. (($activeTab == 3)?'class="active"':'').'><a href="add_webpage.php"><span class="glyphicon glyphicon-globe"></span> Add Webpage</a></li>
-            <li '. (($activeTab == 4)?'class="active"':'').'><a href="query_files.php"><span class="glyphicon glyphicon-search"></span> Query Metadata
-            <li '. (($activeTab == 5)?'class="active"':'').'><a href="orphan_report.php"><span class="glyphicon glyphicon-list-alt"></span> Orphan Report</a></li>
-            <li '. (($activeTab == 6)?'class="active"':'').'><a href="sterile_report.php"><span class="glyphicon glyphicon-list-alt"></span> Sterile Report</a></li>
-            <li '. (($activeTab == 7)?'class="active"':'').'><a href="time_report.php"><span class="glyphicon glyphicon-calendar"></span> Time Report</a></li>
+            <li '. (($activeTab == 4)?'class="active"':'').'><a href="query_files.php"><span class="glyphicon glyphicon-search"></span> Query Metadata </a></li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <span class="glyphicon glyphicon-list-alt"> Reports <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li '. (($activeTab == 5)?'class="active"':'').'><a href="orphan_report.php"><span class="glyphicon glyphicon-list-alt"></span> Orphan Report</a></li>
+                  <li '. (($activeTab == 6)?'class="active"':'').'><a href="sterile_report.php"><span class="glyphicon glyphicon-list-alt"></span> Sterile Report</a></li>
+                  <li '. (($activeTab == 7)?'class="active"':'').'><a href="time_report.php"><span class="glyphicon glyphicon-calendar"></span> Time Report</a></li>
+              </ul>
+            </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

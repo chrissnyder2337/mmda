@@ -10,5 +10,5 @@ $content .= mmda_format_result_table($sterile_report);
 
 
 $template->setContent($content);
-$template->setTab(5);
+$template->setTab(6);
 $template->render();
