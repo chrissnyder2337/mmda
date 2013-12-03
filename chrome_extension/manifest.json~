@@ -18,7 +18,7 @@
     "notifications",
     "background",
     "tabs",
-    "http://[OUR SITE URL].com/*"
+    "http://[OUR SITE URL].com/*",
     "activeTab"
   ]
 }
