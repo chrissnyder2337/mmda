@@ -34,8 +34,27 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'inserturl'){
   $results = '';
   $url = $_POST['urltoadd'];
   if (mmda_isValidURL($url)){
-    $array = mmda_get_webpage_content($url);
-    $results .= var_dump($array);
+    $scraped_urls = mmda_get_webpage_content($url);
+    $results .= print_r($scraped_urls);
+
+    //add the webpage dagr
+    $webpage_dagr_uuid = mmda_add_file($url,TRUE);
+    print_r($webpage_dagr_uuid);
+
+    $results .= '<div class="alert alert-sucess">Webpage added. <a href="edit_file.php?uuid='.$webpage_dagr_uuid.'">EDIT</a></div>';
+
+    $web_page_child_uuids = array();
+    //ADD EACH OF THE SCRAPED FILES
+    foreach ($scraped_urls as $url) {
+      $web_page_child_uuids[] = mmda_add_file($url,TRUE);
+    }
+
+    //SET THE PARENT UUID OF ALL OF THE FILES TO BE THE WEB PAGE
+    foreach ($web_page_child_uuids as $child_uuid) {
+      if(!empty($child_uuid)){
+        mmda_update_parent_uuid($child_uuid,$webpage_dagr_uuid);
+      }
+    }
   } else {
     $results .= '<div class="alert alert-danger">URL is not valid.</a></div><a href="add_webpage.php" class="alert-link">Try Again</a>';
   }
