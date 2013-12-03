@@ -199,8 +199,10 @@ function mmda_update_dagr_keywords($uuid, $keywords){
 
   //add each keyword
   foreach ($keywords as $keyword) {
-    $sql = "INSERT INTO Keywords (uuid, keyword) VALUES (?, ?)";
-    $query = $db->query($sql,array($uuid,$keyword));
+    if(!empty($keyword)){
+      $sql = "INSERT INTO Keywords (uuid, keyword) VALUES (?, ?)";
+      $query = $db->query($sql,array($uuid,$keyword));
+    }
   }
 }
 
