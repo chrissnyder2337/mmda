@@ -17,9 +17,11 @@ if(isset($_GET['uuid'])){
   }
 
 
-  // if(isset($_POST['keywords']){
+  if(isset($_POST['keywords'])){
   //   //update keywords here
-  // }
+    $keywords = explode(",", trim($_POST['keywords']));
+    mmda_update_dagr_keywords($uuid,$keywords);
+  }
 
   $dagr = mmda_get_file($uuid);
 
@@ -63,12 +65,14 @@ if(isset($_GET['uuid'])){
 
 
     //define keyword edit.
-    //TODO: maybe implement something like this: http://jqueryui.com/autocomplete/#multiple
+    //TODO: maybe implement something like http: this://jqueryui.com/autocomplete/#multiple
+    $keywords = mmda_get_keywords($uuid);
+    $keywords_string = implode(",", $keywords);
     $edit_file_form .= ' <!-- Text input-->
     <div class="form-group">
       <label class="col-md-4 control-label" for="keywords">Keywords</label>
       <div class="col-md-5">
-      <input id="keywords" name="keywords" type="text" placeholder="keywords" class="form-control input-md">
+      <input id="keywords" name="keywords" type="text" placeholder="keywords" class="form-control input-md" value="'.$keywords_string.'"/>
       <span class="help-block">Comma Seperated</span>
       </div>
     </div>';

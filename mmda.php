@@ -171,19 +171,41 @@ function mmda_get_file($uuid){
  */
 function mmda_get_keywords($uuid){
   $db = db_connect();
-
   $sql = "SELECT keyword from Keywords where uuid = ?";
-
   $query = $db->query($sql, array($uuid));
-
   $results = $query->fetchAllArray();
 
+  print "<pre>";
+  print_r($results);
+  print "</pre>";
 
   //TODO... make work with multiple values.
   if(isset($results[0])){
-    return $results[0]['keyword'];
+    //complile results into array
+    $keywords = array();
+    foreach ($results as $row) {
+      $keywords[] = $row['keyword'];
+    }
+    return $keywords;
   }else{
     return false;
+  }
+}
+
+function mmda_update_dagr_keywords($uuid, $keywords){
+  if(empty($keywords) || !is_array($keywords)){
+    return FALSE;
+  }
+
+  //Remove all previous keywords.
+  $db = db_connect();
+  $sql = "DELETE FROM Keywords WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  //add each keyword
+  foreach ($keywords as $keyword) {
+    $sql = "INSERT INTO Keywords (uuid, keyword) VALUES (?, ?)";
+    $query = $db->query($sql,array($uuid,$keyword));
   }
 }
 
