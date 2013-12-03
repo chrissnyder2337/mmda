@@ -175,11 +175,6 @@ function mmda_get_keywords($uuid){
   $query = $db->query($sql, array($uuid));
   $results = $query->fetchAllArray();
 
-  print "<pre>";
-  print_r($results);
-  print "</pre>";
-
-  //TODO... make work with multiple values.
   if(isset($results[0])){
     //complile results into array
     $keywords = array();
@@ -204,8 +199,10 @@ function mmda_update_dagr_keywords($uuid, $keywords){
 
   //add each keyword
   foreach ($keywords as $keyword) {
-    $sql = "INSERT INTO Keywords (uuid, keyword) VALUES (?, ?)";
-    $query = $db->query($sql,array($uuid,$keyword));
+    if(!empty($keyword)){
+      $sql = "INSERT INTO Keywords (uuid, keyword) VALUES (?, ?)";
+      $query = $db->query($sql,array($uuid,$keyword));
+    }
   }
 }
 
@@ -435,7 +432,6 @@ function mmda_get_time_report($startDate,$endDate){
       LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
       LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
       LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
-      LEFT JOIN FileReferences on ExecutableMetadata.uuid = File.uuid
       LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
       LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
       LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
@@ -450,6 +446,53 @@ function mmda_get_time_report($startDate,$endDate){
 
   return $results;
 
+}
+
+/**
+ * Delete a dagr from the database.
+ * @param  [type] $uuid [description]
+ * @return [type]       [description]
+ */
+function mmda_delete_dagr($uuid){
+
+  //check if dagr exists
+  if(!mmda_get_file($uuid)){
+    return "No Dagr witht the uuid <strong>".$uuid."</strong> exists";
+  }
+
+  $db = db_connect();
+
+  $sql = "DELETE FROM File WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM AudioMetadata WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM AuthoringMetadata WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM DocumentCountsMetadata WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM ExecutableMetadata WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM ImageResolutionMetadata WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM VideoMetadata WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM WebpageMetadata WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  $sql = "DELETE FROM FileReferences WHERE child_uuid = ? OR parent_uuid = ?";
+  $query = $db->query($sql,array($uuid,$uuid));
+
+  $sql = "DELETE FROM Keywords WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  return "The DAGR (".$uuid.")has been deleted!";
 }
 
 

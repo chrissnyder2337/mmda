@@ -67,7 +67,11 @@ if(isset($_GET['uuid'])){
     //define keyword edit.
     //TODO: maybe implement something like http: this://jqueryui.com/autocomplete/#multiple
     $keywords = mmda_get_keywords($uuid);
-    $keywords_string = implode(",", $keywords);
+    if(is_array($keywords) && !empty($keywords)){
+      $keywords_string = implode(",", $keywords);
+    }else{
+      $keywords_string ='';
+    }
     $edit_file_form .= ' <!-- Text input-->
     <div class="form-group">
       <label class="col-md-4 control-label" for="keywords">Keywords</label>
@@ -83,8 +87,8 @@ if(isset($_GET['uuid'])){
   <div class="form-group">
     <label class="col-md-4 control-label" for="singlebutton"></label>
     <div class="col-md-8">
-          <button id="button2id" name="delete" class="btn btn-danger">Delete DAGR</button>
-      <button id="singlebutton" name="singlebutton" class="btn btn-primary">Save Changes</button>
+      <a href="delete_file.php?uuid='.$uuid.'"> <span class="glyphicon glyphicon-trash"> </span> Delete DAGR </a>
+      <button id="singlebutton" name="singlebutton" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save Changes</button>
 
     </div>
   </div>';
@@ -107,7 +111,7 @@ if(isset($_GET['uuid'])){
   }
 
 } else{
-  $content = '<div class="alert alert-danger"> UUID not specified.</a></div>';
+  $content = '<div class="alert alert-danger"> UUID not specified.</div>';
 }
 
 
