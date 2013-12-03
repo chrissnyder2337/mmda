@@ -227,6 +227,34 @@ function mmda_get_parent_uuid($uuid){
 }
 
 /**
+ * get the html of a single dagr listing
+ *
+ * this includes the filename, and the edit and delete button
+ * @param  [type] $uuid [description]
+ * @return [type]       [description]
+ */
+function mmda_get_dagr_single_html($uuid){
+  $db = db_connect();
+
+  $sql = "SELECT File.uuid, File.resource_name, File.anotated_name
+    FROM File
+   WHERE File.uuid = ? ";
+
+  $query = $db->query($sql,array($uuid));
+
+  $results = $query->fetchAllArray();
+  print_r($results);
+  if(isset($results[0])){
+    return '<div class="dagr-item">'. $results[0]['anotated_name']
+      . ' (' . $results[0]['resource_name'] .')'
+      . '<a href="edit_file.php?uuid='.$uuid.'"> <span class="glyphicon glyphicon-edit"> </span> Edit </a> '
+      . '<a href="delete_file.php?uuid='.$uuid.'"> <span class="glyphicon glyphicon-trash"> </span> Delete </a> </div>';
+  }else{
+    return false;
+  }
+}
+
+/**
  * Get a list of all dagrs keyed by uuid
  * @return array dagrs
  */
@@ -313,33 +341,59 @@ function mmda_get_dagr_html($uuid){
 
   $filename = $file_metadata['resource_name'];
 
-  $html = '
-    <div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading">
-  <h3 class="panel-title"><span class="glyphicon glyphicon-file"></span> '.$filename.'</h3> ('.$uuid.')</div>
-  <div class="panel-body">
-    <a href="#">Download</a> | <a href="#">Remove DAGR</a>
+  //CREATE PARENT DAGR PANEL
+  $parent_uuid = mmda_get_parent_uuid($uuid);
+
+  if(!empty($parent_uuid)){
+    $parent_item_html = mmda_get_dagr_single_html($parent_uuid);
+  }else{
+    $parent_item_html = ' - NO PARENT - ';
+  }
+   // print_r($parent_uuid);
+  $parent_panel_html = '
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="glyphicon glyphicon-file"></span> Parent DAGR
+    </h3></div>
+    <div class="panel-body">
+    '.$parent_item_html.'
+    </div>
   </div>
+  ';
+
+
+  $attr_html = '
+    <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+    <h3 class="panel-title"><span class="glyphicon glyphicon-file"></span> '.$filename.'</h3> ('.$uuid.')</div>
+    <div class="panel-body">
+      <a href="#">Download</a> | <a href="#">Remove DAGR</a>
+    </div>
 
   <!-- List group -->
   <ul class="list-group">';
 
   foreach ($file_metadata as $key => $value) {
     if(!empty($value)){
-      $html .= '<li class="list-group-item">';
+      $attr_html .= '<li class="list-group-item">';
       if(isset($metadata_attributes[$key]) && isset($metadata_attributes[$key]['display'])){
         $label = $metadata_attributes[$key]['display'];
       }else{
         $label = $key;
       }
-      $html .= '<strong>'.$label.':</strong> ';
-      $html .= $value;
-      $html .= '</li>';
+      $attr_html .= '<strong>'.$label.':</strong> ';
+      $attr_html .= $value;
+      $attr_html .= '</li>';
     }
   }
 
-  $html .= '</ul></div>';
+  $attr_html .= '</ul></div>';
+
+
+  $html = $parent_panel_html. $attr_html;
   return $html;
 }
 
