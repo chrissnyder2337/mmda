@@ -165,6 +165,51 @@ function mmda_get_file($uuid){
 }
 
 /**
+ * Get the keywords of the dagr
+ * @param  [type] $uuid [description]
+ * @return [type]       [description]
+ */
+function mmda_get_keywords($uuid){
+  $db = db_connect();
+  $sql = "SELECT keyword from Keywords where uuid = ?";
+  $query = $db->query($sql, array($uuid));
+  $results = $query->fetchAllArray();
+
+  print "<pre>";
+  print_r($results);
+  print "</pre>";
+
+  //TODO... make work with multiple values.
+  if(isset($results[0])){
+    //complile results into array
+    $keywords = array();
+    foreach ($results as $row) {
+      $keywords[] = $row['keyword'];
+    }
+    return $keywords;
+  }else{
+    return false;
+  }
+}
+
+function mmda_update_dagr_keywords($uuid, $keywords){
+  if(empty($keywords) || !is_array($keywords)){
+    return FALSE;
+  }
+
+  //Remove all previous keywords.
+  $db = db_connect();
+  $sql = "DELETE FROM Keywords WHERE uuid = ?";
+  $query = $db->query($sql,array($uuid));
+
+  //add each keyword
+  foreach ($keywords as $keyword) {
+    $sql = "INSERT INTO Keywords (uuid, keyword) VALUES (?, ?)";
+    $query = $db->query($sql,array($uuid,$keyword));
+  }
+}
+
+/**
  * Get the parent dagr's uuid
  * @return [type] [description]
  */
@@ -244,7 +289,13 @@ function mmda_update_anotated_name($uuid, $anotated_name){
   $query = $db->query($sql,array($anotated_name,$uuid));
 }
 
-
+/**
+ * change the parent dagr with $uuid to the dagr with the uuid of
+ * $parent_uuid
+ * @param  [type] $uuid        [description]
+ * @param  [type] $parent_uuid [description]
+ * @return [type]              [description]
+ */
 function mmda_update_parent_uuid($uuid,$parent_uuid){
   $db = db_connect();
 
