@@ -11,9 +11,10 @@ $add_file_form = '
 
 <!-- File Button -->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="file">Select File</label>
+  <label class="col-md-4 control-label" for="file">Select File(s)</label>
   <div class="col-md-4">
-    <input id="file" name="filetoadd" class="input-file" type="file" required="You must specify a file">
+    <input id="file" name="filetoadd[]"  multiple="" class="input-file" type="file" required="You must specify a file">
+    <span class="help-block">To bulk add use Ctrl/Shift to select many files.</span>
   </div>
 </div>
 
@@ -36,29 +37,36 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'insertfile'){
   //add file into tika
   if(!empty($_FILES) && !empty($_FILES['filetoadd'])){
 
+    $number_of_files = count($_FILES['filetoadd']['name']);
+    $file_index = 0;
 
-    //move uploaded file to more permenat location.
-    $uploadedfile = $upload_dir . $_FILES['filetoadd']['name'];
-    if (move_uploaded_file($_FILES['filetoadd']['tmp_name'], $uploadedfile)) {
+    while($file_index < $number_of_files){
 
-      $dagr_uuid = mmda_add_file($uploadedfile);
+      //move uploaded file to more permenat location.
+      $uploadedfile = $upload_dir . $_FILES['filetoadd']['name'][$file_index];
+      if (move_uploaded_file($_FILES['filetoadd']['tmp_name'][$file_index], $uploadedfile)) {
 
-      if($dagr_uuid){
-        $results .= '<div class="alert alert-success">This file\'s DAGR was inserted with the id <b>'.$dagr_uuid.'</b></div>';
+        $dagr_uuid = mmda_add_file($uploadedfile);
 
-        $results .= '<script>window.location="edit_file.php?uuid='.$dagr_uuid.'";</script>';
+        if($dagr_uuid){
+          $results .= '<div class="alert alert-success">'.$_FILES['filetoadd']['name'][$file_index].'\'s DAGR was added. <a target="_blank" href="edit_file.php?uuid='.$dagr_uuid.'" class="btn btn-primary btn-large">EDIT <i class="icon-white icon-circle-arrow-right"></i></a></div>';
 
-        $results .= '<a href="edit_file.php?uuid='.$dagr_uuid.'" class="btn btn-primary btn-large">Continue <i class="icon-white icon-circle-arrow-right"></i></a>';
+          //$results .= '<script>window.location="edit_file.php?uuid='.$dagr_uuid.'";</script>';
 
-        //$results .= mmda_get_dagr_html($dagr_uuid);
+          //$results .= '<a href="edit_file.php?uuid='.$dagr_uuid.'" class="btn btn-primary btn-large">Continue <i class="icon-white icon-circle-arrow-right"></i></a>';
 
-      }else{
-        $results .= '<div class="alert alert-danger"> File already in db.</a></div>';
+          //$results .= mmda_get_dagr_html($dagr_uuid);
+
+        }else{
+          $results .= '<div class="alert alert-danger"> File already in db.</a></div>';
+        }
+
+
+      } else {
+        $results .= '<div class="alert alert-danger"> Was not able to add. Possible upload attack <a href="add_file.php" class="alert-link">Try Again</a></div>';
       }
 
-
-    } else {
-      $results .= '<div class="alert alert-danger"> Was not able to add. Possible upload attack <a href="add_file.php" class="alert-link">Try Again</a></div>';
+      $file_index++;
     }
 
 
