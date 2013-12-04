@@ -245,7 +245,13 @@ $metadata_attributes = array(
     'filterable' => TRUE,
     'display' => 'Webpage Title',
     'table' => 'WebpageMetadata',
-    'tika_alias' => array()
+    'tika_alias' => array('dc:title')
+    ),
+  'anotated_name' => array(
+    'filterable' => TRUE,
+    'display' => 'Webpage Title',
+    'table' => 'File',
+    'tika_alias' => array('dc:title')
     )
   );
 
