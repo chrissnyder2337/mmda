@@ -16,7 +16,8 @@ class TikaWrapper
         $output = implode("\n", $output);
 
         if (empty($output)) {
-            throw new \RuntimeException('command: '.$command. 'output: '.$output);
+            return FALSE;
+            //throw new \RuntimeException('command: '.$command. 'output: '.$output);
         }
 
         return $output;
@@ -57,7 +58,11 @@ class TikaWrapper
     public function getMetaData($filepath)
     {
         $jsonMeta = $this->execute("--json", $filepath);
-        return json_decode($jsonMeta);
+        if($jsonMeta){
+            return json_decode($jsonMeta);
+        }else{
+            return FALSE;
+        }
     }
 
 

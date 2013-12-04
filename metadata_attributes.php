@@ -144,13 +144,13 @@ $metadata_attributes = array(
     'display' => 'Page Count',
     'table' => 'DocumentCountsMetadata',
     'tika_alias' => array('xmpTPg:NPages', 'meta:page-count', 'Page-Count', 'nbPage')
-    ),  
+    ),
   'table_count' => array(
     'filterable' => TRUE,
     'display' => 'Table Count',
     'table' => 'DocumentCountsMetadata',
     'tika_alias' => array()
-    ),  
+    ),
   'paragraph_count' => array(
     'filterable' => TRUE,
     'display' => 'Paragraph Count',

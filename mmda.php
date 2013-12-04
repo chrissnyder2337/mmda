@@ -16,6 +16,7 @@ function mmda_add_file($filepath, $is_external = FALSE){
     //get metadata from tika
     $metadata =  mmda_get_metadata($filepath);
 
+    if(empty($metadata)){return FALSE;}
     //create uuid
     $uuid = mmda_get_uuid();
 
@@ -66,9 +67,11 @@ function mmda_get_metadata($filepath){
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
 
+  if(empty($tika_metadata)){
+    return FALSE;
+  }
   $metadata = mmda_match_metadata($tika_metadata);
   return $metadata;
-
 
 }
 
@@ -506,6 +509,7 @@ function mmda_isValidURL($url){
  * @return array urls
  */
 function mmda_get_webpage_content($url){
+  $url = rtrim($url, " /");
   $html = file_get_html($url);
   $content = array();
   // Find all images
@@ -543,6 +547,7 @@ function mmda_get_time_report($startDate,$endDate){
       LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
       LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
       LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN File f1 on File.uuid = f1.uuid
     WHERE
       File.file_added_timestamp >= ?
       and File.file_added_timestamp < ?";
@@ -574,6 +579,7 @@ function mmda_get_orphan_report(){
       LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
       LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
       LEFT JOIN FileReferences on File.uuid = FileReferences.child_uuid
+      LEFT JOIN File f1 on File.uuid = f1.uuid
     WHERE
       FileReferences.parent_uuid IS NULL";
 
@@ -601,12 +607,12 @@ function mmda_get_sterile_report(){
       LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
       LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
       LEFT JOIN FileReferences on File.uuid = FileReferences.parent_uuid
+      LEFT JOIN File f1 on File.uuid = f1.uuid
     WHERE
       FileReferences.child_uuid IS NULL";
 
   $query = $db->query($sql);
   $results = $query->fetchAllArray();
-
   return $results;
 }
 
@@ -665,7 +671,7 @@ function mmda_delete_dagr($uuid){
  */
 function mmda_format_result_table($results){
   global $metadata_attributes;
-  $html = '<div class="table-responsive" style="overflow:auto; font-size:.7em"><table class="table table-striped table-condensed" >';
+  $html = '<div class="table-responsive" style="overflow:auto;"><table class="table table-striped table-condensed" style="font-size: .9em;" >';
 
   //HEAD OF TABLE
   $html .= '<thead><tr>';
