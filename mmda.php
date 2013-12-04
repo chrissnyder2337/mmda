@@ -521,7 +521,7 @@ function mmda_get_webpage_content($url){
   foreach($html->find('img') as $element){
     if (!preg_match('/^mailto/',$element->src)){
       if (!mmda_isValidURL($element->src))
-        $element->src = $url.$element->src;
+        $element->src = $url.'/'.ltrim($element->src, " /");
       $content[] = $element->src;
     }
   }
@@ -529,7 +529,7 @@ function mmda_get_webpage_content($url){
   foreach($html->find('a') as $element){
     if (!preg_match('/^mailto/',$element->href)){
       if (!mmda_isValidURL($element->href))
-        $element->href = $url.$element->href;
+        $element->href = $url.'/'.ltrim($element->href, " /");
       $content[] = $element->href;
     }
   }
