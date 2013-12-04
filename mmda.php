@@ -5,8 +5,13 @@ require_once ('load_libraries.php');
  * Givin a file will add it to db and return results.
  */
 function mmda_add_file($filepath, $is_external = FALSE){
-
+  //check if readable
+  if(!fopen($filepath, "r")){
+    return FALSE;
+  }
   //get hash of file
+
+
   $file_hash = md5_file($filepath);
   $filename = basename($filepath);
 
