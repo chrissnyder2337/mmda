@@ -9,9 +9,9 @@ function mmda_add_file($filepath, $is_external = FALSE){
   if(!fopen($filepath, "r")){
     return FALSE;
   }
+
+
   //get hash of file
-
-
   $file_hash = md5_file($filepath);
   $filename = basename($filepath);
 
@@ -169,6 +169,45 @@ function mmda_get_file($uuid){
     return $results[0];
   }else{
     return false;
+  }
+}
+
+function mmda_get_all_keywords(){
+  $db = db_connect();
+  $sql = "SELECT DISTINCT(keyword) from Keywords";
+  $query = $db->query($sql);
+  $results = $query->fetchAllArray();
+
+  if(isset($results[0])){
+    //complile results into array
+    $keywords = array();
+    foreach ($results as $row) {
+      $keywords[] = $row['keyword'];
+    }
+    return $keywords;
+  }else{
+    return false;
+  }
+}
+/**
+ * Return all uuids of the DAGRs with
+ * @param  [type] $keyword [description]
+ * @return [type]          [description]
+ */
+function mmda_get_uuids_by_keyword($keyword){
+  $db = db_connect();
+  $sql = "SELECT uuid from Keywords WHERE keyword = ?";
+  $query = $db->query($sql,array($keyword));
+  $results = $query->fetchAllArray();
+
+if(isset($results[0])){
+    $uuids = array();
+    foreach ($results as $row) {
+      $uuids[]  = $row['uuid'];
+    }
+    return $uuids;
+  }else{
+    return array();
   }
 }
 
@@ -422,6 +461,31 @@ function mmda_get_dagr_html($uuid){
   </div>
   ';
 
+  //KEYWORDS PANEL
+
+ $keywords = mmda_get_keywords($uuid);
+ $keywords_items_html = '';
+ $keywords_html = array();
+  foreach ($keywords as $keyword) {
+    $keywords_html[] = '<a  href="keywords.php?keyword='.$keyword.'"><span class="glyphicon glyphicon-tag"></span> '.$keyword.'</a>';
+  }
+  if(!empty($keywords_html)){
+    $keywords_items_html = implode(',',$keywords_html);
+  }
+  $keywords_panel_html = '
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="glyphicon glyphicon-tags"></span> Keywords
+          </h3></div>
+    <div class="panel-body">
+    '.$keywords_items_html.'
+    </div>
+  </div>
+  ';
+
+
 
   $attr_html = '
     <div class="panel panel-default">
@@ -454,7 +518,7 @@ function mmda_get_dagr_html($uuid){
 
   $html = '<div class="row">
     <div class="col-md-6">'. $attr_html.'</div>
-    <div class="col-md-6">'. $parent_panel_html.$children_panel_html.' </div>
+    <div class="col-md-6">'.$keywords_panel_html. $parent_panel_html.$children_panel_html.' </div>
     </div>';
   return $html;
 }

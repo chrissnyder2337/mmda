@@ -86,6 +86,7 @@ public function setTab($activeTab)
           <ul class="nav navbar-nav">
             <li '. (($activeTab == 2)?'class="active"':'').'><a href="add_file.php"><span class="glyphicon glyphicon-file"></span> Add File</a></li>
             <li '. (($activeTab == 3)?'class="active"':'').'><a href="add_webpage.php"><span class="glyphicon glyphicon-globe"></span> Add Webpage</a></li>
+            <li '. (($activeTab == 9)?'class="active"':'').'><a href="keywords.php"><span class="glyphicon glyphicon-tags"></span> Keywords</a></li>
             <li '. (($activeTab == 4)?'class="active"':'').'><a href="query_files.php"><span class="glyphicon glyphicon-search"></span> Query Metadata </a></li>
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
