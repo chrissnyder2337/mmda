@@ -35,7 +35,7 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'inserturl'){
   $url = $_POST['urltoadd'];
   if (mmda_isValidURL($url)){
     $scraped_urls = mmda_get_webpage_content($url);
-    $results .= print_r($scraped_urls);
+    print_r($scraped_urls);
 
     //add the webpage dagr
     $webpage_dagr_uuid = mmda_add_file($url,TRUE);
