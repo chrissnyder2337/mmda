@@ -144,6 +144,34 @@ function mmda_get_uuid(){
 
 }
 
+
+/**
+ * Run a custom query with the user provided where clause
+ *
+ */
+function mmda_run_custom_query($where_clause){
+  $db = db_connect();
+
+  $sql = "SELECT *
+    FROM File
+      LEFT JOIN AudioMetadata on AudioMetadata.uuid = File.uuid
+      LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
+      LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
+      LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
+      LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
+      LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN File f1 on File.uuid = f1.uuid
+    WHERE
+      ". $where_clause;
+
+  $query = $db->query($sql);
+
+  $results = $query->fetchAllArray();
+
+  return $results;
+}
+
 function mmda_get_file($uuid){
   $db = db_connect();
 
@@ -154,10 +182,10 @@ function mmda_get_file($uuid){
       LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
       LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
       LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
-      LEFT JOIN FileReferences on ExecutableMetadata.uuid = File.uuid
       LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
       LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
       LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN File f1 on File.uuid = f1.uuid
     WHERE
       File.uuid = ?";
 
