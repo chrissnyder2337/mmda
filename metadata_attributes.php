@@ -12,7 +12,7 @@ $metadata_attributes = array(
     'filterable' => TRUE,
     'display' => 'Annotated Name',
     'table' => 'File',
-    'tika_alias' => array('dc:title','title')
+    'tika_alias' => array('title','dc:title')
     ),
   'local_path' => array(
     'filterable' => TRUE,
@@ -185,7 +185,7 @@ $metadata_attributes = array(
     'filterable' => TRUE,
     'display' => 'Slide Count',
     'table' => 'DocumentCountsMetadata',
-    'tika_alias' => array()
+    'tika_alias' => array('meta:slide-count','slide-count')
     ),
   'architecture_bits' => array(
     'filterable' => TRUE,
