@@ -43,6 +43,8 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'inserturl'){
 
     $results .= '<div class="alert alert-sucess">Webpage added. <a href="edit_file.php?uuid='.$webpage_dagr_uuid.'">EDIT</a></div>';
 
+    $results .= '<script>window.location="edit_file.php?uuid='.$webpage_dagr_uuid.'";</script>';
+
     $web_page_child_uuids = array();
     //ADD EACH OF THE SCRAPED FILES
     foreach ($scraped_urls as $url) {
