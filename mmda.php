@@ -258,7 +258,7 @@ function mmda_get_keywords($uuid){
     }
     return $keywords;
   }else{
-    return false;
+    return array();
   }
 }
 
@@ -299,6 +299,24 @@ function mmda_get_parent_uuid($uuid){
   }else{
     return false;
   }
+}
+
+function mmda_get_descendants($uuid, &$visited = array()){
+  $children_uuids = mmda_get_children_uuids($uuid);
+
+  $descendant_uuids = $children_uuids;
+  foreach ($children_uuids as $child_uuid) {
+    if(!in_array($child_uuid, $visited)){
+      $visited[] = $child_uuid;
+
+      $more_children = mmda_get_descendants($child_uuid, $visited);
+    }
+
+    $descendant_uuids = array_merge($descendant_uuids, $more_children);
+  }
+
+  return $descendant_uuids;
+
 }
 
 /**
@@ -489,6 +507,32 @@ function mmda_get_dagr_html($uuid){
   </div>
   ';
 
+    //CREATE CHILDREN DAGR PANEL
+  $descendant_uuids = mmda_get_descendants($uuid);
+
+  $descendant_item_html = '';
+
+  if(!empty($descendant_uuids)){
+    foreach ($descendant_uuids as $descendant_uuid) {
+      $descendant_item_html .= mmda_get_dagr_single_html($descendant_uuid);
+    }
+  }else{
+    $descendant_item_html = ' - NO DESCENDANTS - ';
+  }
+
+  $descendant_panel_html = '
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="glyphicon glyphicon-file"></span> Descendant DAGRs (Reach Query)
+          </h3></div>
+    <div class="panel-body">
+    '.$descendant_item_html.'
+    </div>
+  </div>
+  ';
+
   //KEYWORDS PANEL
 
  $keywords = mmda_get_keywords($uuid);
@@ -521,7 +565,7 @@ function mmda_get_dagr_html($uuid){
     <div class="panel-heading">
     <h3 class="panel-title"><span class="glyphicon glyphicon-file"></span> '.$filename.'</h3> ('.$uuid.')</div>
     <div class="panel-body">
-      <a href="#">Download</a> | <a href="#">Remove DAGR</a>
+
     </div>
 
   <!-- List group -->
@@ -536,7 +580,11 @@ function mmda_get_dagr_html($uuid){
         $label = $key;
       }
       $attr_html .= '<strong>'.$label.':</strong> ';
-      $attr_html .= $value;
+      if($key == 'external_path' || $key == 'local_path'){
+        $attr_html .= '<a href="'.$value.'" target="_blank">'.$value.'</a>';
+      }else{
+        $attr_html .= $value;
+      }
       $attr_html .= '</li>';
     }
   }
@@ -546,7 +594,7 @@ function mmda_get_dagr_html($uuid){
 
   $html = '<div class="row">
     <div class="col-md-6">'. $attr_html.'</div>
-    <div class="col-md-6">'.$keywords_panel_html. $parent_panel_html.$children_panel_html.' </div>
+    <div class="col-md-6">'.$keywords_panel_html. $parent_panel_html.$children_panel_html.$descendant_panel_html.' </div>
     </div>';
   return $html;
 }
