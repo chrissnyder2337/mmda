@@ -72,6 +72,10 @@ function mmda_get_metadata($filepath){
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
 
+  // print "<pre>";
+  // print_r($tika_metadata);
+  // print "</pre>";
+
   if(empty($tika_metadata)){
     return FALSE;
   }
@@ -95,9 +99,10 @@ function mmda_match_metadata($tika_metadata){
   foreach ($tika_metadata as $attribute => $value) {
     // check if atribute is storable
     if(isset($metadata_aliases[$attribute])){
-      $db_name = $metadata_aliases[$attribute];
-      $metadata[$db_name] = $metadata_attributes[$db_name];
-      $metadata[$db_name]['value'] = $value;
+      foreach ($metadata_aliases[$attribute] as $db_attribute) {
+        $metadata[$db_attribute] = $metadata_attributes[$db_attribute];
+        $metadata[$db_attribute]['value'] = $value;
+      }
     }
   }
 
@@ -144,6 +149,34 @@ function mmda_get_uuid(){
 
 }
 
+
+/**
+ * Run a custom query with the user provided where clause
+ *
+ */
+function mmda_run_custom_query($where_clause){
+  $db = db_connect();
+
+  $sql = "SELECT *
+    FROM File
+      LEFT JOIN AudioMetadata on AudioMetadata.uuid = File.uuid
+      LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
+      LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
+      LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
+      LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
+      LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
+      LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN File f1 on File.uuid = f1.uuid
+    WHERE
+      ". $where_clause;
+
+  $query = $db->query($sql);
+
+  $results = $query->fetchAllArray();
+
+  return $results;
+}
+
 function mmda_get_file($uuid){
   $db = db_connect();
 
@@ -154,10 +187,10 @@ function mmda_get_file($uuid){
       LEFT JOIN AuthoringMetadata on AuthoringMetadata.uuid = File.uuid
       LEFT JOIN DocumentCountsMetadata on DocumentCountsMetadata.uuid = File.uuid
       LEFT JOIN ExecutableMetadata on ExecutableMetadata.uuid = File.uuid
-      LEFT JOIN FileReferences on ExecutableMetadata.uuid = File.uuid
       LEFT JOIN ImageResolutionMetadata on ImageResolutionMetadata.uuid = File.uuid
       LEFT JOIN VideoMetadata on VideoMetadata.uuid = File.uuid
       LEFT JOIN WebpageMetadata on WebpageMetadata.uuid = File.uuid
+      LEFT JOIN File f1 on File.uuid = f1.uuid
     WHERE
       File.uuid = ?";
 
@@ -186,7 +219,7 @@ function mmda_get_all_keywords(){
     }
     return $keywords;
   }else{
-    return false;
+    return array();
   }
 }
 /**
@@ -230,7 +263,7 @@ function mmda_get_keywords($uuid){
     }
     return $keywords;
   }else{
-    return false;
+    return array();
   }
 }
 
@@ -271,6 +304,24 @@ function mmda_get_parent_uuid($uuid){
   }else{
     return false;
   }
+}
+
+function mmda_get_descendants($uuid, &$visited = array()){
+  $children_uuids = mmda_get_children_uuids($uuid);
+
+  $descendant_uuids = $children_uuids;
+  foreach ($children_uuids as $child_uuid) {
+    if(!in_array($child_uuid, $visited)){
+      $visited[] = $child_uuid;
+
+      $more_children = mmda_get_descendants($child_uuid, $visited);
+    }
+
+    $descendant_uuids = array_merge($descendant_uuids, $more_children);
+  }
+
+  return $descendant_uuids;
+
 }
 
 /**
@@ -461,6 +512,32 @@ function mmda_get_dagr_html($uuid){
   </div>
   ';
 
+    //CREATE CHILDREN DAGR PANEL
+  $descendant_uuids = mmda_get_descendants($uuid);
+
+  $descendant_item_html = '';
+
+  if(!empty($descendant_uuids)){
+    foreach ($descendant_uuids as $descendant_uuid) {
+      $descendant_item_html .= mmda_get_dagr_single_html($descendant_uuid);
+    }
+  }else{
+    $descendant_item_html = ' - NO DESCENDANTS - ';
+  }
+
+  $descendant_panel_html = '
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="glyphicon glyphicon-file"></span> Descendant DAGRs (Reach Query)
+          </h3></div>
+    <div class="panel-body">
+    '.$descendant_item_html.'
+    </div>
+  </div>
+  ';
+
   //KEYWORDS PANEL
 
  $keywords = mmda_get_keywords($uuid);
@@ -493,7 +570,7 @@ function mmda_get_dagr_html($uuid){
     <div class="panel-heading">
     <h3 class="panel-title"><span class="glyphicon glyphicon-file"></span> '.$filename.'</h3> ('.$uuid.')</div>
     <div class="panel-body">
-      <a href="#">Download</a> | <a href="#">Remove DAGR</a>
+
     </div>
 
   <!-- List group -->
@@ -508,7 +585,11 @@ function mmda_get_dagr_html($uuid){
         $label = $key;
       }
       $attr_html .= '<strong>'.$label.':</strong> ';
-      $attr_html .= $value;
+      if($key == 'external_path' || $key == 'local_path'){
+        $attr_html .= '<a href="'.$value.'" target="_blank">'.$value.'</a>';
+      }else{
+        $attr_html .= $value;
+      }
       $attr_html .= '</li>';
     }
   }
@@ -518,7 +599,7 @@ function mmda_get_dagr_html($uuid){
 
   $html = '<div class="row">
     <div class="col-md-6">'. $attr_html.'</div>
-    <div class="col-md-6">'.$keywords_panel_html. $parent_panel_html.$children_panel_html.' </div>
+    <div class="col-md-6">'.$keywords_panel_html. $parent_panel_html.$children_panel_html.$descendant_panel_html.' </div>
     </div>';
   return $html;
 }
@@ -532,7 +613,10 @@ function mmda_get_metadata_attributes(){
   $metadata_aliases = array();
   foreach ($metadata_attributes as $db_attribute => $db_attribute_properties) {
     foreach ($db_attribute_properties['tika_alias'] as $tika_alias) {
-      $metadata_aliases[$tika_alias] = $db_attribute;
+      if(!isset($metadata_aliases[$tika_alias])){
+        $metadata_aliases[$tika_alias] = array();
+      }
+      $metadata_aliases[$tika_alias][] = $db_attribute;
     }
   }
 

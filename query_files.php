@@ -1,78 +1,158 @@
 <?php
 require_once ('load_libraries.php');
 
-function get_attributeoptions(){
+$content = '';
 
-  $attribute_options = '';
-
-  $attributes = mmda_get_filterable_attributes();
-
-  foreach($attributes as $dbattr => $displayattr){
-    $attribute_options .= '<option value="'.$dbattr.'">'.$displayattr.'</option>';
-  }
-
-  return $attribute_options;
-}
-
-$criteria_form = '
-<div class="row">
-  <div class="form-inline">
-    <div class="col-md-4">
-      <div class="form-group">
-          <select id="attribute" name="attribute[]" class="form-control">
-            '.get_attributeoptions().'
-          </select>
+$query_help = '
+<h3> Query Help </h3> <a data-toggle="collapse" data-target="#helper">
+  Show / Hide
+</a>
+<div class="helper" id="helper">
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">File</h3>
       </div>
+      <div class="panel-body">
+        Main file metadata.
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><code>File.annotated_name</code>  User annotated Name</li>
+        <li class="list-group-item"><code>File.resource_name</code>  File name of document</li>
+        <li class="list-group-item"><code>File.content_type</code>  ex: html, pdf, etc <br><i>Recommend use <code>LIKE</code> for these.</li>
+        <li class="list-group-item"><code>File.content_length</code>  Size of file (in bytes)</li>
+        <li class="list-group-item"><code>File.file_added_timestamp</code></li>
+        <li class="list-group-item"><code>File.local_path</code></li>
+        <li class="list-group-item"><code>File.external_path</code>  ex: URL</li>
+      </ul>
     </div>
-    <div class="col-md-4">
-      <div class="form-group">
-          <select id="operator" name="operator[]" class="form-control">
-            <option value="= \'value\'">Equal To</option>
-            <option value="!= \'value\'">Not Equal To</option>
-            <option value="< \'value\'">Less Than</option>
-            <option value="> \'value\'">Greater Than</option>
-            <option value="LIKE \'%value%\'">Contains</option>
-            <option value="">Does Not Contain</option>
-          </select>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Webpage</h3>
       </div>
+      <div class="panel-body">
+        Webpage specific metadata.
+      </div>
+       <ul class="list-group">
+        <li class="list-group-item"><code>WebpageMetadata.webpage_title</code></li>
+      </ul>
     </div>
-    <div class="col-md-4">
-      <!-- Text input-->
-      <div class="form-group">
-        <input id="value" name="value[]" placeholder="value" class="form-control input-md" type="text">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Video</h3>
       </div>
+      <div class="panel-body">
+        Video specific metadata.
+      </div>
+       <ul class="list-group">
+        <li class="list-group-item"><code>VideoMetadata.video_format</code></li>
+        <li class="list-group-item"><code>VideoMetadata.video_duration</code></li>
+        <li class="list-group-item"><code>VideoMetadata.audio_duration</code></li>
+      </ul>
     </div>
   </div>
-</div>
-';
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Authoring</h3>
+      </div>
+      <div class="panel-body">
+        Generic file metadata involving author and date.
+      </div>
+       <ul class="list-group">
+        <li class="list-group-item"><code>AuthoringMetadata.created_date</code></li>
+          <li class="list-group-item"><code>AuthoringMetadata.last_modified_date</code></li>
+          <li class="list-group-item"><code>AuthoringMetadata.author</code></li>
+          <li class="list-group-item"><code>AuthoringMetadata.title</code></li>
+      </ul>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Document Counts</h3>
+      </div>
+      <div class="panel-body">
+        Document counts found in office file types.
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><code>DocumentCountsMetadata.image_count</code></li>
+        <li class="list-group-item"><code>DocumentCountsMetadata.page_count</code></li>
+        <li class="list-group-item"><code>DocumentCountsMetadata.table_count</code></li>
+        <li class="list-group-item"><code>DocumentCountsMetadata.paragraph_count</code></li>
+        <li class="list-group-item"><code>DocumentCountsMetadata.character_count</code></li>
+        <li class="list-group-item"><code>DocumentCountsMetadata.word_count</code></li>
+        <li class="list-group-item"><code>DocumentCountsMetadata.<br>character_count_with_space</code></li>
+        <li class="list-group-item"><code>DocumentCountsMetadata.slide_count</code></li>
+      </ul>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Executables</h3>
+      </div>
+      <div class="panel-body">
+        Metadata specific to executable files.
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><code>ExecutableMetadata.architecture_bits</code></li>
+        <li class="list-group-item"><code>ExecutableMetadata.machine_type</code>  ex: x86</li>
+        <li class="list-group-item"><code>ExecutableMetadata.machine_platform</code>  ex: Windows</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Image</h3>
+      </div>
+      <div class="panel-body">
+        Demension metadata of image files.
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><code>ImageResolutionMetadata.x_resolution</code></li>
+        <li class="list-group-item"><code>ImageResolutionMetadata.y_resolution</code></li>
+        <li class="list-group-item"><code>ImageResolutionMetadata.resolution_units</code></li>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Audio</h3>
+      </div>
+      <div class="panel-body">
+        Metadata involving music and audio files.
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><code>AudioMetadata.audio_bitrate</code></li>
+        <li class="list-group-item"><code>AudioMetadata.audio_sample_rate</code></li>
+        <li class="list-group-item"><code>AudioMetadata.channels</code></li>
+        <li class="list-group-item"><code>AudioMetadata.channel_type</code></li>
+        <li class="list-group-item"><code>AudioMetadata.audio_format</code></li>
+        <li class="list-group-item"><code>AudioMetadata.track_number</code></li>
+        <li class="list-group-item"><code>AudioMetadata.title</code></li>
+        <li class="list-group-item"><code>AudioMetadata.genre</code></li>
+        <li class="list-group-item"><code>AudioMetadata.duration</code></li>
+        <li class="list-group-item"><code>AudioMetadata.artist</code></li>
+        <li class="list-group-item"><code>AudioMetadata.album</code></li>
+        <li class="list-group-item"><code>AudioMetadata.audio_compression</code></li>
+    </div>
+  </div>
+</div>';
 
 $query_form = '
-<script>
-  var criteria = 1;
-  function add_criteria() {
-      criteria++;
-      var objTo = document.getElementById("criteria_field")
-      var divtest = document.createElement("div");
-      divtest.innerHTML =document.getElementById("criteria_field_template").innerHTML;
 
-      objTo.appendChild(divtest)
-  }
-</script>
 <form class="form-horizontal">
 <fieldset>
 
 <!-- Form Name -->
-<legend>Query Metadata</legend>
+<h1>Query Metadata</h1>
 
-<a id="more_criteria" onclick="add_criteria();" ><span class="glyphicon glyphicon-plus"></span> Add Filter Criteria</a>
-
-<div id="criteria_field_template" style="display:none">
-'.$criteria_form.'
+<div id="criteria_field">
+<!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="where_clause">Where Clause</label>
+    <div class="col-md-8">
+    <input id="where_clause" name="where_clause" type="text" placeholder="File.anotated_name = \'hat\'" class="form-control input-md" required="">
+    <span class="help-block">Provide SQL Conditions. Example: File.anotated_name = "hat"</span>
+    </div>
+  </div>
 </div>
-
-<div id="criteria_field"> '
- . $criteria_form .
-'</div>
 
 <!-- Button -->
 <div class="form-group">
@@ -86,14 +166,20 @@ $query_form = '
 </form>
 ';
 
+$content .= $query_form;
 
 if(isset($_GET['submit']) && $_GET['submit'] == 'query'){
 
+  $where_clause = $_GET['where_clause'];
 
-}else{
-  $template->setContent($query_form);
+  $query_results = mmda_run_custom_query($where_clause);
+  $query_results = mmda_remove_empty_columns($query_results);
+  $results_html = mmda_format_result_table($query_results);
+
+  $content .= $results_html;
+
 }
-
-
+$content .= $query_help;
+$template->setContent($content);
 $template->setTab(4);
 $template->render();
