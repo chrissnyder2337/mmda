@@ -655,8 +655,13 @@ function mmda_get_tables(){
  * Determine if URL is valid
  */
 function mmda_isValidURL($url){
-        return preg_match('#^(?:https?|ftp)://#', $url);
+  return preg_match('#^(?:https?|ftp)://#', $url);
 }
+
+function mmda_hasAnchors($url){
+  return preg_match('#^[^\#]*$#', $url);
+}
+/*
 /*
  * Parses through all downloadable content of the given webpage.
  * @return array urls
@@ -667,7 +672,7 @@ function mmda_get_webpage_content($url){
   $content = array();
   // Find all images
   foreach($html->find('img') as $element){
-    if (!preg_match('/^mailto/',$element->src)){
+    if (!preg_match('/^mailto/',$element->src) && !mmda_hasAnchors($element->src)){
       if (!mmda_isValidURL($element->src))
         $element->src = $url.'/'.ltrim($element->src, " /");
       $content[] = $element->src;
@@ -675,7 +680,7 @@ function mmda_get_webpage_content($url){
   }
   // Find all links
   foreach($html->find('a') as $element){
-    if (!preg_match('/^mailto/',$element->href)){
+    if (!preg_match('/^mailto/',$element->href) && !mmda_hasAnchors($element->href)){
       if (!mmda_isValidURL($element->href))
         $element->href = $url.'/'.ltrim($element->href, " /");
       $content[] = $element->href;
