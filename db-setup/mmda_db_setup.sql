@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 15, 2013 at 02:50 PM
+-- Generation Time: Dec 15, 2013 at 02:56 PM
 -- Server version: 5.5.34-0ubuntu0.13.04.1
 -- PHP Version: 5.4.9-4ubuntu2.3
 
@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `AudioMetadata`
 --
 
+DROP TABLE IF EXISTS `AudioMetadata`;
 CREATE TABLE IF NOT EXISTS `AudioMetadata` (
   `uuid` varchar(64) NOT NULL,
   `audio_bitrate` float DEFAULT NULL,
@@ -49,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `AudioMetadata` (
 -- Table structure for table `AuthoringMetadata`
 --
 
+DROP TABLE IF EXISTS `AuthoringMetadata`;
 CREATE TABLE IF NOT EXISTS `AuthoringMetadata` (
   `uuid` varchar(64) NOT NULL,
   `created_date` timestamp NULL DEFAULT NULL,
@@ -64,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `AuthoringMetadata` (
 -- Table structure for table `DocumentCountsMetadata`
 --
 
+DROP TABLE IF EXISTS `DocumentCountsMetadata`;
 CREATE TABLE IF NOT EXISTS `DocumentCountsMetadata` (
   `uuid` varchar(64) NOT NULL,
   `image_count` int(11) DEFAULT NULL,
@@ -83,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `DocumentCountsMetadata` (
 -- Table structure for table `ExecutableMetadata`
 --
 
+DROP TABLE IF EXISTS `ExecutableMetadata`;
 CREATE TABLE IF NOT EXISTS `ExecutableMetadata` (
   `uuid` varchar(64) NOT NULL,
   `architecture_bits` int(11) DEFAULT NULL,
@@ -97,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `ExecutableMetadata` (
 -- Table structure for table `File`
 --
 
+DROP TABLE IF EXISTS `File`;
 CREATE TABLE IF NOT EXISTS `File` (
   `uuid` varchar(64) NOT NULL,
   `anotated_name` varchar(32) DEFAULT NULL COMMENT 'User defined',
@@ -116,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `File` (
 -- Table structure for table `FileReferences`
 --
 
+DROP TABLE IF EXISTS `FileReferences`;
 CREATE TABLE IF NOT EXISTS `FileReferences` (
   `parent_uuid` varchar(64) NOT NULL,
   `child_uuid` varchar(64) NOT NULL,
@@ -129,6 +135,7 @@ CREATE TABLE IF NOT EXISTS `FileReferences` (
 -- Table structure for table `ImageResolutionMetadata`
 --
 
+DROP TABLE IF EXISTS `ImageResolutionMetadata`;
 CREATE TABLE IF NOT EXISTS `ImageResolutionMetadata` (
   `uuid` varchar(64) NOT NULL,
   `x_resolution` int(11) DEFAULT NULL,
@@ -143,6 +150,7 @@ CREATE TABLE IF NOT EXISTS `ImageResolutionMetadata` (
 -- Table structure for table `Keywords`
 --
 
+DROP TABLE IF EXISTS `Keywords`;
 CREATE TABLE IF NOT EXISTS `Keywords` (
   `uuid` varchar(64) NOT NULL,
   `keyword` varchar(256) NOT NULL,
@@ -155,6 +163,7 @@ CREATE TABLE IF NOT EXISTS `Keywords` (
 -- Table structure for table `VideoMetadata`
 --
 
+DROP TABLE IF EXISTS `VideoMetadata`;
 CREATE TABLE IF NOT EXISTS `VideoMetadata` (
   `uuid` varchar(64) NOT NULL,
   `video_datarate` int(11) DEFAULT NULL,
@@ -170,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `VideoMetadata` (
 -- Table structure for table `WebpageMetadata`
 --
 
+DROP TABLE IF EXISTS `WebpageMetadata`;
 CREATE TABLE IF NOT EXISTS `WebpageMetadata` (
   `uuid` varchar(64) NOT NULL,
   `webpage_title` varchar(256) DEFAULT NULL,
