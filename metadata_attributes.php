@@ -8,6 +8,12 @@ $metadata_attributes = array(
     'table' => 'File',
     'tika_alias' => array('resourceName')
     ),
+  'anotated_name' => array(
+    'filterable' => TRUE,
+    'display' => 'Annotated Name',
+    'table' => 'File',
+    'tika_alias' => array('title','dc:title')
+    ),
   'local_path' => array(
     'filterable' => TRUE,
     'display' => 'Local Path',
@@ -179,25 +185,25 @@ $metadata_attributes = array(
     'filterable' => TRUE,
     'display' => 'Slide Count',
     'table' => 'DocumentCountsMetadata',
-    'tika_alias' => array()
+    'tika_alias' => array('meta:slide-count','slide-count')
     ),
   'architecture_bits' => array(
     'filterable' => TRUE,
     'display' => 'Architecture Bits',
     'table' => 'ExecutableMetadata',
-    'tika_alias' => array()
+    'tika_alias' => array('machine:architectureBits')
     ),
   'machine_type' => array(
     'filterable' => TRUE,
     'display' => 'Machine Type',
     'table' => 'ExecutableMetadata',
-    'tika_alias' => array()
+    'tika_alias' => array('machine:machineType')
     ),
   'machine_platform' => array(
     'filterable' => TRUE,
     'display' => 'Machine Platform',
     'table' => 'ExecutableMetadata',
-    'tika_alias' => array()
+    'tika_alias' => array('machine:platform')
     ),
   'x_resolution' => array(
     'filterable' => TRUE,

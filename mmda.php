@@ -72,6 +72,10 @@ function mmda_get_metadata($filepath){
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
 
+  // print "<pre>";
+  // print_r($tika_metadata);
+  // print "</pre>";
+
   if(empty($tika_metadata)){
     return FALSE;
   }
@@ -95,9 +99,10 @@ function mmda_match_metadata($tika_metadata){
   foreach ($tika_metadata as $attribute => $value) {
     // check if atribute is storable
     if(isset($metadata_aliases[$attribute])){
-      $db_name = $metadata_aliases[$attribute];
-      $metadata[$db_name] = $metadata_attributes[$db_name];
-      $metadata[$db_name]['value'] = $value;
+      foreach ($metadata_aliases[$attribute] as $db_attribute) {
+        $metadata[$db_attribute] = $metadata_attributes[$db_attribute];
+        $metadata[$db_attribute]['value'] = $value;
+      }
     }
   }
 
@@ -214,7 +219,7 @@ function mmda_get_all_keywords(){
     }
     return $keywords;
   }else{
-    return false;
+    return array();
   }
 }
 /**
@@ -608,7 +613,10 @@ function mmda_get_metadata_attributes(){
   $metadata_aliases = array();
   foreach ($metadata_attributes as $db_attribute => $db_attribute_properties) {
     foreach ($db_attribute_properties['tika_alias'] as $tika_alias) {
-      $metadata_aliases[$tika_alias] = $db_attribute;
+      if(!isset($metadata_aliases[$tika_alias])){
+        $metadata_aliases[$tika_alias] = array();
+      }
+      $metadata_aliases[$tika_alias][] = $db_attribute;
     }
   }
 

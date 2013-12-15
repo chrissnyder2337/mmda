@@ -84,6 +84,19 @@ $query_help = '
         <li class="list-group-item"><code>DocumentCountsMetadata.slide_count</code></li>
       </ul>
     </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Executables</h3>
+      </div>
+      <div class="panel-body">
+        Metadata specific to executable files.
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><code>ExecutableMetadata.architecture_bits</code></li>
+        <li class="list-group-item"><code>ExecutableMetadata.machine_type</code>  ex: x86</li>
+        <li class="list-group-item"><code>ExecutableMetadata.machine_platform</code>  ex: Windows</li>
+      </ul>
+    </div>
   </div>
   <div class="col-md-4">
     <div class="panel panel-default">
@@ -153,7 +166,7 @@ $query_form = '
 </form>
 ';
 
-$content .= $query_form . $query_help;
+$content .= $query_form;
 
 if(isset($_GET['submit']) && $_GET['submit'] == 'query'){
 
@@ -166,7 +179,7 @@ if(isset($_GET['submit']) && $_GET['submit'] == 'query'){
   $content .= $results_html;
 
 }
-
+$content .= $query_help;
 $template->setContent($content);
 $template->setTab(4);
 $template->render();
