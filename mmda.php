@@ -72,9 +72,9 @@ function mmda_get_metadata($filepath){
   $tika = new TikaWrapper();
   $tika_metadata =  $tika->getMetaData($filepath);
 
-  print "<pre>";
-  print_r($tika_metadata);
-  print "</pre>";
+  // print "<pre>";
+  // print_r($tika_metadata);
+  // print "</pre>";
 
   if(empty($tika_metadata)){
     return FALSE;
@@ -219,7 +219,7 @@ function mmda_get_all_keywords(){
     }
     return $keywords;
   }else{
-    return false;
+    return array();
   }
 }
 /**
